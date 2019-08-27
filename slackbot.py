@@ -5,6 +5,7 @@ from datetime import datetime
 from datetime import timedelta  
 from time import mktime
 import requests
+import urllib.parse
 import os
 
 
@@ -60,7 +61,7 @@ class SlackBot(object):
             userInfo = self.getUserInfo(employee)
             url = f'https://queue.apps.pcfone.io/?name={employee["first_name"]}+{employee["last_name"]}'
             msg = f'Hi @{userInfo[1]}! It looks like you have not yet authorized me to set your status to "training" yet. Please follow this url to do so:{url}'
-            self.slackBotUser.chat.post_message( channel='#sup-ooq', 
+            self.slackBotUser.chat.post_message( channel='#ooq-test', 
                                             text=msg,
                                             username='Out of Queue Bot',
                                             link_names=1
@@ -73,7 +74,7 @@ class SlackBot(object):
         for eng in self.inTraining:
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
             
-        self.slackBotUser.chat.post_message(channel='#sup-ooq', 
+        self.slackBotUser.chat.post_message(channel='#ooq-test', 
                                             text=endstr,
                                             username='Out of Queue Bot',
                                             link_names=1

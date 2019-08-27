@@ -21,7 +21,10 @@ users = db.users
 def pre_install():
     name = request.args['name'].split(' ')
     first_name = name[0]
-    last_name = name[1]
+    if len(name) == 3:
+        last_name = name[2]
+    else:
+        last_name = name[1]
     
     return f'<a href="https://slack.com/oauth/authorize?scope={ oauth_scope }&client_id={ client_id }&state={first_name}+{last_name}">Authorize App (you will be redirected to Slack)</a>'
 
@@ -46,7 +49,7 @@ def post_install():
         code=auth_code
     )
     
-    #print(response)
+    print(response)
     # Save the bot token to an environmental variable or to your data store
 # for later use
     person = {
@@ -67,4 +70,4 @@ def post_install():
         channel='#test-queue',
         text="Hello world!")'''
     
-    return "Auth complete! You will receive a notification on your Out of Queue day!"
+    return "Auth complete! You will receive a notification on your Out of Queue day!" 
