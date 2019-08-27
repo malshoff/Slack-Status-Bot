@@ -1,0 +1,4 @@
+password.json
+*.txt
+venv/*
+__pycache__
