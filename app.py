@@ -1,7 +1,8 @@
 import os
 import slack
-from flask import Flask, request
+from flask import Flask, request, redirect
 from pymongo import MongoClient
+from slackbot import SlackBot
 
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
@@ -16,6 +17,9 @@ client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 users = db.users
 
+COMMANDS = {
+    "list"
+}
 
 @app.route("/", methods=["GET"])
 def pre_install():
@@ -71,3 +75,17 @@ def post_install():
         text="Hello world!")'''
     
     return "Auth complete! You will receive a notification on your Out of Queue day!" 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return "command not found"
+
+@app.route("/command", methods=["GET","POST"])
+def execCommand():
+    #userID = request.args["user_id"]
+    command = request.form.get("text")
+    if command not in COMMANDS:
+        flask.redirect(404)
+    s = SlackBot()
+    s.msgOutOfQueue()
+    return "Please visit #ooq-test to see the result!"

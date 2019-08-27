@@ -87,5 +87,5 @@ s = SlackBot()
 #s.setStatus(me)
 #s.msgOutOfQueue()
 
-for engineer in s.inTraining:
-    s.setStatus(engineer)
+'''for engineer in s.inTraining:
+    s.setStatus(engineer)'''
