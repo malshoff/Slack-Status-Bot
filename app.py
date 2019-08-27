@@ -1,5 +1,6 @@
 import os
 import slack
+import flask
 from flask import Flask, request, redirect
 from pymongo import MongoClient
 from slackbot import SlackBot
@@ -88,11 +89,12 @@ def execCommand():
     if command == "list":
         s.msgOutOfQueue()
     elif command == "run":
-        run(users.find_one({"user_id":request.form.get("access_token")}))
+        return run(users.find_one({"user_id":request.form.get("access_token")}))
     return "Please visit #ooq-test to see the result!"
 
 def run(eng):
     if eng:
         s.setStatus(eng)
+        return "ran set status!"
     else:
         flask.redirect(404)

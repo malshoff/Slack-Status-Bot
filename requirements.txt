@@ -15,4 +15,3 @@ slackclient==2.1.0
 slacker==0.13.0
 Werkzeug==0.15.4
 WTForms==2.2.1
-
