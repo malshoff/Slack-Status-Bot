@@ -1,4 +1,4 @@
 password.json
-*.txt
+groupnames.txt
 venv/*
 __pycache__
