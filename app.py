@@ -7,8 +7,6 @@ from slackbot import SlackBot
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
 oauth_scope = os.environ["SLACK_SCOPE"]
-
-
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 
 app = Flask(__name__)
@@ -17,6 +15,7 @@ client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 users = db.users
 
+s = SlackBot()
 COMMANDS = {
     "list"
 }
@@ -86,6 +85,14 @@ def execCommand():
     command = request.form.get("text")
     if command not in COMMANDS:
         flask.redirect(404)
-    s = SlackBot()
-    s.msgOutOfQueue()
+    if command == "list":
+        s.msgOutOfQueue()
+    elif command == "run":
+        run(users.find_one({"user_id":request.form.get("access_token")}))
     return "Please visit #ooq-test to see the result!"
+
+def run(eng):
+    if eng:
+        s.setStatus(eng)
+    else:
+        flask.redirect(404)
