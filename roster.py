@@ -34,7 +34,7 @@ class Roster(object):
                                                 'email': person['email']
                                                 }
     def getOutOfQueue(self):
-        r = requests.get('https://pivotal-roster-api.cfapps.io/api/schedule/employee_schedule?audit_date='+str(self.TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
+        r = requests.get('https://pivotal-roster-api.cfapps.io/api/schedule/employee_schedule?active=true&audit_date='+str(self.TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
         engs = r.json()
         res = []
         for eng in engs:
