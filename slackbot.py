@@ -19,6 +19,7 @@ class SlackBot(object):
         self.inTraining = self.roster.getOutOfQueue()  # list of training engineers
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
         self.slackBotUser = Slacker(self.BOT_TOKEN)
+        self.HAS_BLASTED_CHANNEL = False
 
     def isInDB(self,employee):
         client = MongoClient(f"{self.CONNECT_STRING}")
@@ -104,23 +105,22 @@ class SlackBot(object):
                                            )
 
     def msgOutOfQueue(self):
-        endstr = "The following engineers are out of queue on {}: ".format(self.roster.TODAYS_DATE)
+        endstr = "Hello team! The following engineers are out of queue on {}: ".format(self.roster.TODAYS_DATE)
         for eng in self.inTraining:
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
-            
-        self.slackBotUser.chat.post_message(channel='#ooq-test', 
+       
+        self.slackBotUser.chat.post_message(channel='#sup-ooq', 
                                             text=endstr,
                                             username='Out of Queue Bot',
                                             link_names=1
-                                           )
-        
-#TODO: Create a different file to run the bot 
-s = SlackBot()
-#print(s.inTraining)
-#me = s.isInDB({'first_name': 'Malachi', 'last_name': 'Shoffner'})
-#s.setStatus(me)
-#s.msgOutOfQueue()
-
-'''for engineer in s.inTraining:
-    s.setStatus(engineer)'''
-
+                                            )
+    def msgAllStaff(self):
+        endstr = "Hello team! The following engineers are out of queue on {}: ".format(self.roster.TODAYS_DATE)
+        for eng in self.inTraining:
+            endstr += eng["first_name"] + " " + eng["last_name"] + ","
+        self.slackBotUser.chat.post_message(channel='#sup-pcf-staff', 
+                                                text=endstr,
+                                                username='Out of Queue Bot',
+                                                link_names=1
+                                               )
+ 

@@ -89,8 +89,11 @@ def page_not_found(e):
 @app.route("/command", methods=["GET","POST"])
 def execCommand():
     def choose_command(command,user_id):
-        if command == "list":
+        if command == "list":    
             s.msgOutOfQueue()
+        elif command == "listall":
+            if user_id == 'UF57DA49F':
+                s.msgAllStaff()
         elif command == "run":
             cur = users.find_one({"user_id":user_id})
             return run(cur,user_id)
