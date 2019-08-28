@@ -20,7 +20,7 @@ class SlackBot(object):
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
         self.slackBotUser = Slacker(self.BOT_TOKEN)
         self.TRAINING_IDS = self.trainingIds()
-        self.RESPONDED_THREADS = set()
+        
         
 
     def isInDB(self,employee):
