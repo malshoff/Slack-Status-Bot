@@ -91,7 +91,7 @@ def execCommand():
             s.msgOutOfQueue()
         elif command == "run":
             cur = users.find_one({"user_id":user_id})
-            return run(cur)
+            return run(cur,user_id)
         elif command == "runall":
             if user_id == 'UF57DA49F':
                 runAll()
@@ -106,9 +106,14 @@ def execCommand():
     thread.start()
     return "Please visit #ooq-test to see the result! (this may take a few seconds)"
 
-def run(eng):
-    s.setStatus(eng)
-    return "Ran set status!"
+def run(eng,user_id):
+    if eng:
+        s.setStatus(eng)
+        return "Ran set status!"
+    else:
+        info = s.getUserById(user_id)
+        url = s.buildURL(info)
+        s.sendInitMsg(url,user_id)
    
 
 def runAll():
