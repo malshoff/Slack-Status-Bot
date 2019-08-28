@@ -4,6 +4,8 @@ import flask
 from flask import Flask, request, redirect
 from pymongo import MongoClient
 from slackbot import SlackBot
+import requests
+from threading import Thread
 
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
@@ -20,7 +22,9 @@ s = SlackBot()
 COMMANDS = {
     "list"
 }
-
+RESPONSE_JSON = {
+    "text": "Received Command"
+}
 @app.route("/", methods=["GET"])
 def pre_install():
     name = request.args['name'].split(' ')
@@ -82,19 +86,31 @@ def page_not_found(e):
 
 @app.route("/command", methods=["GET","POST"])
 def execCommand():
-    #userID = request.args["user_id"]
+    def choose_command(command,user_id):
+        if command == "list":
+            s.msgOutOfQueue()
+        elif command == "run":
+            cur = users.find_one({"user_id":user_id})
+            return run(cur)
+        elif command == "runall":
+            if user_id == 'UF57DA49F':
+                runAll()
+            else:
+                return "Only Malachi can run this command. MUAHAHAHAHA"
+    user_id = request.form.get("user_id")
     command = request.form.get("text")
     if command not in COMMANDS:
-        flask.redirect(404)
-    if command == "list":
-        s.msgOutOfQueue()
-    elif command == "run":
-        return run(users.find_one({"user_id":request.form.get("access_token")}))
-    return "Please visit #ooq-test to see the result!"
+            flask.redirect(404)
+    #url = request.form.get("response_url")
+    thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
+    thread.start()
+    return "Please visit #ooq-test to see the result! (this may take a few seconds)"
 
 def run(eng):
-    if eng:
-        s.setStatus(eng)
-        return "ran set status!"
-    else:
-        flask.redirect(404)
+    s.setStatus(eng)
+    return "Ran set status!"
+   
+
+def runAll():
+    for engineer in s.inTraining:
+        s.setStatus(engineer)

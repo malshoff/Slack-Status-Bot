@@ -51,7 +51,7 @@ class SlackBot(object):
             slack.users.profile.set(user = cur['user_id'], name = 'status_expiration', 
                                     value = unix_date)
             slack.dnd.set_snooze(num_minutes=1440)             
-            self.slackBotUser.chat.post_message( channel='#sup-ooq', 
+            self.slackBotUser.chat.post_message( channel='#ooq-test', 
                                             text=f'{cur["first_name"]} is Out of Queue Today!',
                                             username='Out of Queue Bot'
                                           )
@@ -61,10 +61,11 @@ class SlackBot(object):
             userInfo = self.getUserInfo(employee)
             url = f'https://queue.apps.pcfone.io/?name={employee["first_name"]}+{employee["last_name"]}'
             msg = f'Hi @{userInfo[1]}! It looks like you have not yet authorized me to set your status to "training" yet. Please follow this url to do so:{url}'
-            self.slackBotUser.chat.post_message( channel='#ooq-test', 
+            self.slackBotUser.chat.post_message( channel=userInfo[0], 
                                             text=msg,
                                             username='Out of Queue Bot',
-                                            link_names=1
+                                            link_names=1,
+                                            as_user=True
                                           )
 
 
@@ -89,3 +90,4 @@ s = SlackBot()
 
 '''for engineer in s.inTraining:
     s.setStatus(engineer)'''
+
