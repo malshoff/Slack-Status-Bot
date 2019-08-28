@@ -120,12 +120,12 @@ def events():
 
         flag = False 
         msg = e["event"]["text"]
-        sb = SlackBot()
-        for eng in sb.TRAINING_IDS:
+        
+        for eng in s.TRAINING_IDS:
             if eng in msg:
                 flag = eng
         if flag != False:
-             sb.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
+             s.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
                                                 text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
                                                 username='Out of Queue Bot',
                                                 link_names=1,
