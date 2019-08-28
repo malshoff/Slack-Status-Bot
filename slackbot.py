@@ -42,6 +42,7 @@ class SlackBot(object):
         return (response.json()['user']['id'],response.json()['user']['real_name'],response.json()['user']['name'])
     
     def buildURL(self,name):
+        name = name.split()
         first_name = name[0]
         last_name = name[-1]
         url = f'https://queue.apps.pcfone.io/?name={first_name}+{last_name}'
