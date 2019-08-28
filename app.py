@@ -112,7 +112,7 @@ def run(eng,user_id):
         return "Ran set status!"
     else:
         info = s.getUserById(user_id)
-        url = s.buildURL(info)
+        url = s.buildURL(info[1])
         s.sendInitMsg(url,user_id)
    
 
