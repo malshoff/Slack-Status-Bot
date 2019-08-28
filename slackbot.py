@@ -34,19 +34,19 @@ class SlackBot(object):
     def getUserByEmail(self,email):
         endpoint = 'https://slack.com/api/users.lookupByEmail'
         response = requests.post(endpoint,data= {'token':self.BOT_TOKEN, 'email':email})
-        return (response.json()['user']['id'],response.json()['user']['real_name'])
+        return (response.json()['user']['id'],response.json()['user']['real_name'],response.json()['user']['name'])
 
     def getUserById(self,user_id):
         endpoint = 'https://slack.com/api/users.info'
         response = requests.post(endpoint,data= {'token':self.BOT_TOKEN, 'user':user_id})
-        return (response.json()['user']['id'],response.json()['user']['real_name'])
+        return (response.json()['user']['id'],response.json()['user']['real_name'],response.json()['user']['name'])
     
     def buildURL(self,name):
         first_name = name[0]
         last_name = name[-1]
         url = f'https://queue.apps.pcfone.io/?name={first_name}+{last_name}'
         return url
-        
+
     def setStatus(self,employee):
         cur = self.isInDB(employee)
         tomorrow = datetime.now() + timedelta(days=1) 
