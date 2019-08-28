@@ -1,4 +1,5 @@
 import os
+import slack
 import slacker
 import flask
 from flask import Flask, request, redirect
@@ -22,9 +23,9 @@ s = SlackBot()
 COMMANDS = {
     "list"
 }
-RESPONSE_JSON = {
-    "text": "Received Command"
-}
+
+RESPONDED_THREADS = set()
+
 @app.route("/", methods=["GET"])
 def pre_install():
     name = request.args['name'].split(' ')
@@ -128,12 +129,15 @@ def events():
             if eng in msg:
                 flag = eng
         if flag != False:
-             s.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
-                                                text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
-                                                username='Out of Queue Bot',
-                                                link_names=1,
-                                                thread_ts = e["event"]["ts"]
-                                               )
+             thread = e["event"]["ts"]
+             if thread not in RESPONDED_THREADS:
+                s.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
+                                                 text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
+                                                 username='Out of Queue Bot',
+                                                 link_names=1,
+                                                 thread_ts = thread
+                                                )
+                RESPONDED_THREADS.add(thread)
 
     thread = Thread(target=processEvent,kwargs={'e':r} )
     thread.start()
