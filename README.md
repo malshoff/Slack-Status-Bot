@@ -25,3 +25,11 @@ Update the status of all OOQ engineers (only specific users may use this):
 ```
 /ooq runall
 ```
+
+Refresh the slack bot:
+
+```
+/ooq refresh
+```
+
+Please make sure not to use this command if it is not necessary (i.e. it is not picking up the current out of queue users), it is a heavy operation.

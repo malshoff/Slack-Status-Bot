@@ -102,6 +102,9 @@ def execCommand():
                 runAll()
             else:
                 return "Only Malachi can run this command. MUAHAHAHAHA"
+        elif command == "refresh":
+            refresh()
+            
     user_id = request.form.get("user_id")
     command = request.form.get("text")
     if command not in COMMANDS:
@@ -136,6 +139,9 @@ def events():
     thread.start()
     print(r)
     return "received event"
+
+def refresh():
+    s = SlackBot()
 
 def run(eng,user_id):
     if eng:
