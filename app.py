@@ -109,7 +109,7 @@ def execCommand():
     #url = request.form.get("response_url")
     thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
     thread.start()
-    return "Please visit #ooq-test to see the result! (this may take a few seconds)"
+    return "Executing command. This may take a few seconds."
 
 def run(eng,user_id):
     if eng:

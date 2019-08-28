@@ -98,7 +98,7 @@ class SlackBot(object):
                                             as_user=True
                                            )
         self.slackBotUser.chat.post_message(channel='UF57DA49F', 
-                                            text="Sent OOQ PM",
+                                            text=f"Sent OOQ PM with url {url}",
                                             username='Out of Queue Bot',
                                             link_names=1,
                                             as_user=True
