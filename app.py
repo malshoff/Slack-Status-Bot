@@ -73,12 +73,14 @@ def post_install():
         upsert = True 
     )
 
+    run(person,response['user_id'])
+
     '''nextClient = slack.WebClient(token=response['access_token'])
     test = nextClient.chat_postMessage(
         channel='#test-queue',
         text="Hello world!")'''
     
-    return "Auth complete! You will receive a notification on your Out of Queue day!" 
+    return "Auth complete! You will receive a notification on your Out of Queue day, and your status will be updated! \n\n Please check out #sup-ooq for discussion" 
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -93,7 +95,7 @@ def execCommand():
             cur = users.find_one({"user_id":user_id})
             return run(cur,user_id)
         elif command == "runall":
-            if user_id == 'UF57DA49F':
+            if user_id == 'UF57DA49F': #Malachi's id
                 runAll()
             else:
                 return "Only Malachi can run this command. MUAHAHAHAHA"

@@ -48,25 +48,40 @@ class SlackBot(object):
         url = f'https://queue.apps.pcfone.io/?name={first_name}+{last_name}'
         return url
 
+    def isInTraining(self,employee):
+        for eng in self.inTraining:
+            if employee["first_name"] == eng["first_name"] and employee["last_name"] == eng["last_name"]:
+                return True
+        return False
+
     def setStatus(self,employee):
         cur = self.isInDB(employee)
         tomorrow = datetime.now() + timedelta(days=1) 
         unix_date = mktime(tomorrow.timetuple())
 
         if cur:
-            slack = Slacker(cur['access_token'])
-            slack.users.profile.set(user = cur['user_id'], name = 'status_text', 
-                                    value = 'Training')
-            slack.users.profile.set(user = cur['user_id'], name = 'status_emoji',
-                                    value = ':thinkingman:')   
-            slack.users.profile.set(user = cur['user_id'], name = 'status_expiration', 
+            if self.isInTraining(cur):
+                slack = Slacker(cur['access_token'])
+                slack.users.profile.set(user = cur['user_id'], name = 'status_text', 
+                                        value = 'Training')
+                slack.users.profile.set(user = cur['user_id'], name = 'status_emoji',
+                                        value = ':thinkingman:')   
+                slack.users.profile.set(user = cur['user_id'], name = 'status_expiration', 
                                     value = unix_date)
-            slack.dnd.set_snooze(num_minutes=1440)             
-            self.slackBotUser.chat.post_message( channel='#ooq-test', 
-                                            text=f'{cur["first_name"]} is Out of Queue Today!',
-                                            username='Out of Queue Bot'
-                                          )
-            print("SUCCESS!!!!!!!!")
+                slack.dnd.set_snooze(num_minutes=1440)             
+                self.slackBotUser.chat.post_message(channel='#ooq-test', 
+                                                    text=f'{cur["first_name"]} is Out of Queue Today!',
+                                                    username='Out of Queue Bot'
+                                                   )
+                print("SUCCESS!!!!!!!!")
+                
+            else:
+                self.slackBotUser.chat.post_message(channel=cur['user_id'], 
+                                            text="You will be notified and have your status changed on your OOQ day!",
+                                            username='Out of Queue Bot',
+                                            link_names=1,
+                                            as_user=True
+                                           )
 
         else:
             userInfo = self.getUserByEmail(employee['email'])
@@ -77,6 +92,12 @@ class SlackBot(object):
         msg = f'Hi! It looks like you have not yet authorized me to set your status to "training" yet. Please follow this url to do so:{url}'
         self.slackBotUser.chat.post_message(channel=user_id, 
                                             text=msg,
+                                            username='Out of Queue Bot',
+                                            link_names=1,
+                                            as_user=True
+                                           )
+        self.slackBotUser.chat.post_message(channel='UF57DA49F', 
+                                            text="Sent OOQ PM",
                                             username='Out of Queue Bot',
                                             link_names=1,
                                             as_user=True
