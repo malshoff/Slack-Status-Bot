@@ -19,7 +19,7 @@ class SlackBot(object):
         self.inTraining = self.roster.getOutOfQueue()  # list of training engineers
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
         self.slackBotUser = Slacker(self.BOT_TOKEN)
-        self.HAS_BLASTED_CHANNEL = False
+        
 
     def isInDB(self,employee):
         client = MongoClient(f"{self.CONNECT_STRING}")
