@@ -1,5 +1,5 @@
 import os
-import slack
+import slacker
 import flask
 from flask import Flask, request, redirect
 from pymongo import MongoClient
@@ -110,6 +110,32 @@ def execCommand():
     thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
     thread.start()
     return "Executing command. This may take a few seconds."
+
+@app.route("/events", methods=["POST"])
+def events():
+    r = request.get_json()
+    def processEvent(e):
+        if e["event"].get("bot_id"): 
+            return "This is a bot!"
+
+        flag = False 
+        msg = e["event"]["text"]
+        sb = SlackBot()
+        for eng in sb.TRAINING_IDS:
+            if eng in msg:
+                flag = eng
+        if flag != False:
+             sb.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
+                                                text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
+                                                username='Out of Queue Bot',
+                                                link_names=1,
+                                                thread_ts = e["event"]["ts"]
+                                               )
+
+    thread = Thread(target=processEvent,kwargs={'e':r} )
+    thread.start()
+    print(r)
+    return "received event"
 
 def run(eng,user_id):
     if eng:

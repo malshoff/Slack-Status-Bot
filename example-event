@@ -1,0 +1,6 @@
+{'token': 'pWpOdA1nsaVTebJSIahGiBQh', 'team_id': 'T024LQKAS', 'api_app_id': 'AMP70SNLW', 
+'event': 
+{'client_msg_id': '726786a1-7d57-4d59-97db-af90e9ae04fd', 'type': 'message', 
+'text': '<@UF57DA49F> testing mentioning', 'user': 'UF57DA49F', 'ts': '1567004892.001900', 
+'team': 'T024LQKAS', 'channel': 'CMPTRQJQL','event_ts': '1567004892.001900', 'channel_type': 'channel'},
+ 'type': 'event_callback', 'event_id': 'EvMSLSUJ9J', 'event_time': 1567004892, 'authed_users': ['UMQC6KLHE']}

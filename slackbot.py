@@ -19,6 +19,7 @@ class SlackBot(object):
         self.inTraining = self.roster.getOutOfQueue()  # list of training engineers
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
         self.slackBotUser = Slacker(self.BOT_TOKEN)
+        self.TRAINING_IDS = self.trainingIds()
         
 
     def isInDB(self,employee):
@@ -30,7 +31,16 @@ class SlackBot(object):
             return False
         else:
             return cur 
-    
+
+    #Return a set of Slack user IDs of CEs that are Out of Queue today 
+    def trainingIds(self):
+        idset = set()
+        for t in self.inTraining:
+            cur = self.isInDB(t)
+            if cur:
+                idset.add(cur['user_id'])
+        return idset
+
     #returns slack user ID and username of employee as a tuple
     def getUserByEmail(self,email):
         endpoint = 'https://slack.com/api/users.lookupByEmail'
