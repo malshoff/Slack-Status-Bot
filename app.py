@@ -12,6 +12,7 @@ client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
 oauth_scope = os.environ["SLACK_SCOPE"]
 CONNECT_STRING = os.environ["CONNECT_STRING"]
+VCAP_SERVICES = os.environ["VCAP_SERVICES"]
 
 
 app = Flask(__name__)
@@ -19,7 +20,7 @@ app = Flask(__name__)
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 users = db.users
-RESPONDED_THREADS = db.responded
+
 
 s = SlackBot()
 
@@ -133,25 +134,31 @@ def events():
             return "This is a bot!"
 
         flag = False 
-        msg = e["event"]["text"]
+        try:
+            msg = e["event"]["text"]
+        except:
+            print(f'Error: {e}')
+            return
         
         for eng in s.TRAINING_IDS:
             if eng in msg:
                 flag = eng
+        print(f"Flag after for loop: {flag}")
         if flag != False:
              thread = e["event"]["ts"]
-             if thread not in RESPONDED_THREADS:
-                s.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
+             s.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
                                                  text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
                                                  username='Out of Queue Bot',
                                                  link_names=1,
                                                  thread_ts = thread
                                                 )
-                RESPONDED_THREADS.add(thread)
+                
 
     thread = Thread(target=processEvent,kwargs={'e':r} )
     thread.start()
     print(r)
+    print("THIS IS WHERE IT STARTS --------------------------------")
+    print(s.TRAINING_IDS)
     return "received event"
 
 def refresh():

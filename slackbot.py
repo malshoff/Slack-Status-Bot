@@ -11,15 +11,18 @@ import os
 
 
 
+
+
 class SlackBot(object):
 
-    def __init__(self):
+    def __init__(self,tz="EAST"):
         self.CONNECT_STRING = os.environ["CONNECT_STRING"]
-        self.roster = Roster("password.json")
+        self.roster = Roster("password.json",tz)
         self.inTraining = self.roster.getOutOfQueue()  # list of training engineers
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
         self.slackBotUser = Slacker(self.BOT_TOKEN)
         self.TRAINING_IDS = self.trainingIds()
+        
         
         
 
@@ -120,7 +123,7 @@ class SlackBot(object):
         for eng in self.inTraining:
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
        
-        self.slackBotUser.chat.post_message(channel='#sup-ooq', 
+        self.slackBotUser.chat.post_message(channel='#ooq-test', 
                                             text=endstr,
                                             username='Out of Queue Bot',
                                             link_names=1
@@ -135,4 +138,9 @@ class SlackBot(object):
                                                 username='Out of Queue Bot',
                                                 link_names=1
                                                )
+        self.slackBotUser.chat.post_message(channel='#support-data-amer', 
+                                                text=endstr,
+                                                username='Out of Queue Bot',
+                                                link_names=1
+                                               )                                       
  
