@@ -13,6 +13,7 @@ client_secret = os.environ["SLACK_CLIENT_SECRET"]
 oauth_scope = os.environ["SLACK_SCOPE"]
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 
+
 app = Flask(__name__)
 
 client = MongoClient(f'{CONNECT_STRING}')
