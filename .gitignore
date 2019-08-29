@@ -2,3 +2,5 @@ password.json
 groupnames.txt
 venv/*
 __pycache__
+example-event
+

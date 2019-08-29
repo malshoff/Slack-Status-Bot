@@ -18,13 +18,18 @@ app = Flask(__name__)
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 users = db.users
+RESPONDED_THREADS = db.responded
 
 s = SlackBot()
+
 COMMANDS = {
-    "list"
+    "list",
+    "listall",
+    "run",
+    "runall"
+    "refresh"
 }
 
-RESPONDED_THREADS = set()
 
 @app.route("/", methods=["GET"])
 def pre_install():
@@ -85,10 +90,17 @@ def post_install():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return "command not found"
+    return "Command not found"
+
 
 @app.route("/command", methods=["GET","POST"])
 def execCommand():
+    
+    user_id = request.form.get("user_id")
+    command = request.form.get("text")
+    if command not in COMMANDS:
+            return flask.redirect(404)
+
     def choose_command(command,user_id):
         if command == "list":    
             s.msgOutOfQueue()
@@ -106,10 +118,7 @@ def execCommand():
         elif command == "refresh":
             refresh()
             
-    user_id = request.form.get("user_id")
-    command = request.form.get("text")
-    if command not in COMMANDS:
-            flask.redirect(404)
+   
     #url = request.form.get("response_url")
     thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
     thread.start()
