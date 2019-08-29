@@ -27,7 +27,7 @@ COMMANDS = {
     "list",
     "listall",
     "run",
-    "runall"
+    "runall", 
     "refresh"
 }
 
