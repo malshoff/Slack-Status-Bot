@@ -38,9 +38,11 @@ def testtask(command,user_id):
 def choose_command(command,user_id):
         if command == "list":    
             listTest()
+            
         elif command == "listall":
             if user_id == 'UF57DA49F':
-                s.msgAllStaff()
+                listAll()
+
         elif command == "run":
             cur = users.find_one({"user_id":user_id})
             return run(cur,user_id)
