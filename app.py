@@ -109,10 +109,11 @@ def execCommand():
 @app.route("/events", methods=["POST"])
 def events():
     r = request.get_json()
-    def processEvent(e):
-        if e["event"].get("bot_id"): 
+
+    if r["event"].get("bot_id"): 
             return "This is a bot!"
 
+    def processEvent(e):
         flag = False 
         try:
             msg = e["event"]["text"]
