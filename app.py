@@ -91,18 +91,12 @@ def page_not_found(e):
 
 @app.route("/command", methods=["GET","POST"])
 def execCommand():
-    
     user_id = request.form.get("user_id")
     command = request.form.get("text")
     if command not in COMMANDS:
             return flask.redirect(404)
-
-    if command == "test":
-        testtask.delay(command,user_id)
-    #url = request.form.get("response_url")
-    #thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
-    #thread.start()
-
+    
+    #enqueue the command
     choose_command.delay(command,user_id)
     return "Executing command. This may take a few seconds."
 

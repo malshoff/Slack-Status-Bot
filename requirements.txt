@@ -17,4 +17,3 @@ Werkzeug==0.15.4
 WTForms==2.2.1
 cfenv
 celery
-python-semantic-release

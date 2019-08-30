@@ -1,2 +1,10 @@
 __pycache__
 venv
+groupnames.txt
+__pycache__
+example-event
+pyvenv.cfg
+semantic.py 
+setup.cfg 
+populate_timezones.py 
+.travis.yml

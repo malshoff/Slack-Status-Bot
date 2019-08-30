@@ -18,7 +18,7 @@ BROKER_URL = redis_url
 
 app = Celery('tasks', broker=BROKER_URL)
 
-s = SlackBot()
+
 
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
@@ -27,6 +27,7 @@ users = db.users
 
 @app.task
 def testtask(command,user_id):
+    s = SlackBot()
     s.slackBotUser.chat.post_message(channel='#ooq-test', 
                                                  text="testing with the Redis queue worked!",
                                                  username='Out of Queue Bot',
@@ -37,8 +38,8 @@ def testtask(command,user_id):
 @app.task
 def choose_command(command,user_id):
         if command == "list":    
-            listTest()
-            
+            listTestChannel()
+
         elif command == "listall":
             if user_id == 'UF57DA49F':
                 listAll()
@@ -56,9 +57,10 @@ def choose_command(command,user_id):
             refresh()
 
 def refresh():
-    s = SlackBot()
+    return "deprecated"
 
 def run(eng,user_id):
+    s = SlackBot()
 
     if eng:
         s.setStatus(eng)
@@ -70,13 +72,14 @@ def run(eng,user_id):
    
 
 def runAll():
+    s = SlackBot()
     for engineer in s.inTraining:
         s.setStatus(engineer)
 
-def listTest():
-    sb = SlackBot()
-    sb.msgOutOfQueue()
+def listTestChannel():
+    s = SlackBot()
+    s.msgOutOfQueue()
 
 def listAll():
-    sb = SlackBot()
-    sb.msgAllStaff()
+    s = SlackBot()
+    s.msgAllStaff()
