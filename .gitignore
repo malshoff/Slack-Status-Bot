@@ -3,4 +3,5 @@ groupnames.txt
 venv/*
 __pycache__
 example-event
+pyvenv.cfg
 
