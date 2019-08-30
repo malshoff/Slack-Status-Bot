@@ -51,14 +51,11 @@ def pre_install():
 def post_install():
   # Retrieve the auth code from the request params
     auth_code = request.args['code']
-    #print(request.args['state'])
     names = request.args['state'].split(' ')
-    #print(names)
     first_name = names[0]
     last_name = names[1]
 
-    #print(auth_code)
-  # An empty string is a valid token for this request
+
     client = slack.WebClient(token="")
 
   # Request the auth tokens from Slack
@@ -68,9 +65,8 @@ def post_install():
         code=auth_code
     )
     
-    print(response)
-    # Save the bot token to an environmental variable or to your data store
-# for later use
+  
+    # Save the token to an to data store for later use
     person = {
         'access_token': response['access_token'],
         'user_id': response['user_id'],
@@ -85,11 +81,6 @@ def post_install():
     )
 
     run(person,response['user_id'])
-
-    '''nextClient = slack.WebClient(token=response['access_token'])
-    test = nextClient.chat_postMessage(
-        channel='#test-queue',
-        text="Hello world!")'''
     
     return "Auth complete! You will receive a notification on your Out of Queue day, and your status will be updated! \n\n Please check out #sup-ooq for discussion" 
 
@@ -148,3 +139,12 @@ def events():
     print(s.TRAINING_IDS)
     return "received event"
 
+def run(eng,user_id):
+
+    if eng:
+        s.setStatus(eng)
+        return "Ran set status!"
+    else:
+        info = s.getUserById(user_id)
+        url = s.buildURL(info[1])
+        s.sendInitMsg(url,user_id)
