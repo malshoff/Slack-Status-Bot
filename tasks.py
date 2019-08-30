@@ -19,7 +19,6 @@ BROKER_URL = redis_url
 app = Celery('tasks', broker=BROKER_URL)
 
 
-
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
@@ -62,7 +61,6 @@ def choose_command(command, user_id):
 @app.task
 def processEvent(e):
     s = SlackBot()
-    
 
     if e["event"].get("bot_id"):
         return "This is a bot!"
