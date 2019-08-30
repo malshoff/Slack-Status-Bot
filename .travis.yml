@@ -1,6 +1,5 @@
 sudo: required
 language: python
-
 jobs:
   include:
     # Define the release stage that runs semantic-release
@@ -13,4 +12,4 @@ jobs:
           - git config --global user.email "semantic-release@travis"
           - pip install python-semantic-release
           - semantic-release publish
-          
+        
