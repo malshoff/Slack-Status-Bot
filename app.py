@@ -2,6 +2,7 @@ import os
 import slack
 import slacker
 import flask
+import json
 from flask import Flask, request, redirect
 from pymongo import MongoClient
 from slackbot import SlackBot
@@ -103,10 +104,7 @@ def execCommand():
 @app.route("/events", methods=["POST"])
 def events():
     r = request.get_json()
-    processEvent.apply_async(args=(r), queue="events")
-    print(r)
-    print("THIS IS WHERE IT STARTS --------------------------------")
-    print(s.TRAINING_IDS)
+    processEvent.apply_async(args=(r,), queue="events")
     return "received event"
 
 def run(eng,user_id):

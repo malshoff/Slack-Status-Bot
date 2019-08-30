@@ -62,6 +62,7 @@ def choose_command(command, user_id):
 @app.task
 def processEvent(e):
     s = SlackBot()
+    
 
     if e["event"].get("bot_id"):
         return "This is a bot!"

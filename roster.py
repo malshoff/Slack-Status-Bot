@@ -28,7 +28,6 @@ class Roster(object):
         timezones = db.timezones
         print("Finding tz" + str(tz))
         ea = timezones.find_one({tz:{'$exists': True}})
-        print(ea)
         return set(ea[tz])
 
     def updateEmployees(self,tz):

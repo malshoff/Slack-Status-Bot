@@ -15,7 +15,7 @@ applications:
   domain: apps.pcfone.io
   no-route: true
   buildpack: https://github.com/cloudfoundry/python-buildpack
-  command: gunicorn app:app --log-file=- & celery -A tasks worker -Q celery,events,commands --loglevel=info 
+  command: celery -A tasks worker -Q celery,events,commands --loglevel=info 
   instances: 1
   memory: 1G
   disk_quota: 1G
