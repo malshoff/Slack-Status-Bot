@@ -37,7 +37,7 @@ def testtask(command,user_id):
 @app.task
 def choose_command(command,user_id):
         if command == "list":    
-            s.msgOutOfQueue()
+            listTest()
         elif command == "listall":
             if user_id == 'UF57DA49F':
                 s.msgAllStaff()
@@ -70,3 +70,11 @@ def run(eng,user_id):
 def runAll():
     for engineer in s.inTraining:
         s.setStatus(engineer)
+
+def listTest():
+    sb = SlackBot()
+    sb.msgOutOfQueue()
+
+def listAll():
+    sb = SlackBot()
+    sb.msgAllStaff()
