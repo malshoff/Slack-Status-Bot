@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from slackbot import SlackBot
 import requests
 from threading import Thread
-from tasks import testtask
+from tasks import testtask,choose_command
 
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
@@ -86,7 +86,7 @@ def post_install():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return "Command not found"
+    return "Not found"
 
 
 @app.route("/command", methods=["GET","POST"])
@@ -102,6 +102,8 @@ def execCommand():
     #url = request.form.get("response_url")
     #thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
     #thread.start()
+
+    choose_command.delay(command,user_id)
     return "Executing command. This may take a few seconds."
 
 @app.route("/events", methods=["POST"])
