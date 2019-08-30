@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from slackbot import SlackBot
 import requests
 from threading import Thread
-from tasks import testtask,choose_command
+from tasks import testtask,choose_command, processEvent
 
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
@@ -97,39 +97,13 @@ def execCommand():
             return flask.redirect(404)
     
     #enqueue the command
-    choose_command.delay(command,user_id)
+    choose_command.apply_async(args=(command,user_id), queue="commands")
     return "Executing command. This may take a few seconds."
 
 @app.route("/events", methods=["POST"])
 def events():
     r = request.get_json()
-    def processEvent(e):
-        if e["event"].get("bot_id"): 
-            return "This is a bot!"
-
-        flag = False 
-        try:
-            msg = e["event"]["text"]
-        except:
-            print(f'Error: {e}')
-            return
-        
-        for eng in s.TRAINING_IDS:
-            if eng in msg:
-                flag = eng
-        print(f"Flag after for loop: {flag}")
-        if flag != False:
-             thread = e["event"]["ts"]
-             s.slackBotUser.chat.post_message(channel=e["event"]["channel"], 
-                                                 text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
-                                                 username='Out of Queue Bot',
-                                                 link_names=1,
-                                                 thread_ts = thread
-                                                )
-                
-
-    thread = Thread(target=processEvent,kwargs={'e':r} )
-    thread.start()
+    processEvent.apply_async(args=(r), queue="events")
     print(r)
     print("THIS IS WHERE IT STARTS --------------------------------")
     print(s.TRAINING_IDS)
