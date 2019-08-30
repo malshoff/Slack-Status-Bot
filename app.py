@@ -7,12 +7,13 @@ from pymongo import MongoClient
 from slackbot import SlackBot
 import requests
 from threading import Thread
+from tasks import testtask
 
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
 oauth_scope = os.environ["SLACK_SCOPE"]
 CONNECT_STRING = os.environ["CONNECT_STRING"]
-VCAP_SERVICES = os.environ["VCAP_SERVICES"]
+
 
 
 app = Flask(__name__)
@@ -29,8 +30,10 @@ COMMANDS = {
     "listall",
     "run",
     "runall", 
-    "refresh"
+    "refresh",
+    "test"
 }
+
 
 
 @app.route("/", methods=["GET"])
@@ -103,27 +106,11 @@ def execCommand():
     if command not in COMMANDS:
             return flask.redirect(404)
 
-    def choose_command(command,user_id):
-        if command == "list":    
-            s.msgOutOfQueue()
-        elif command == "listall":
-            if user_id == 'UF57DA49F':
-                s.msgAllStaff()
-        elif command == "run":
-            cur = users.find_one({"user_id":user_id})
-            return run(cur,user_id)
-        elif command == "runall":
-            if user_id == 'UF57DA49F': #Malachi's id
-                runAll()
-            else:
-                return "Only Malachi can run this command. MUAHAHAHAHA"
-        elif command == "refresh":
-            refresh()
-            
-   
+    if command == "test":
+        testtask.delay(command,user_id)
     #url = request.form.get("response_url")
-    thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
-    thread.start()
+    #thread = Thread(target=choose_command,kwargs= {'command':command,'user_id':user_id})
+    #thread.start()
     return "Executing command. This may take a few seconds."
 
 @app.route("/events", methods=["POST"])
@@ -161,19 +148,3 @@ def events():
     print(s.TRAINING_IDS)
     return "received event"
 
-def refresh():
-    s = SlackBot()
-
-def run(eng,user_id):
-    if eng:
-        s.setStatus(eng)
-        return "Ran set status!"
-    else:
-        info = s.getUserById(user_id)
-        url = s.buildURL(info[1])
-        s.sendInitMsg(url,user_id)
-   
-
-def runAll():
-    for engineer in s.inTraining:
-        s.setStatus(engineer)

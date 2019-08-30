@@ -1,0 +1,23 @@
+---
+applications:
+- name: queue
+  host: queue
+  domain: apps.pcfone.io
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  command: gunicorn app:app --log-file=-
+  instances: 1
+  memory: 1G
+  disk_quota: 1G
+  services:
+    - redis
+- name: worker
+  host: worker
+  domain: apps.pcfone.io
+  no-route: true
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  command: gunicorn app:app --log-file=- & celery -A tasks worker --loglevel=info --concurrency=1
+  instances: 1
+  memory: 1G
+  disk_quota: 1G
+  services:
+    - redis
