@@ -132,7 +132,7 @@ class SlackBot(object):
     def msgAllStaff(self):
         endstr = "Hello team! The following engineers are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
-        for eng in self.inTraining:
+        for eng in self.inTraining: 
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
         self.slackBotUser.chat.post_message(channel='#sup-pcf-staff',
                                             text=endstr,
