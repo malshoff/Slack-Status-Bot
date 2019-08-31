@@ -120,8 +120,9 @@ class SlackBot(object):
         for eng in self.inTraining:
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
-        if not self.inTraining:
+        if len(self.inTraining) == 0:
             endstr = "No one today!"
+
         self.slackBotUser.chat.post_message(channel='#ooq-test',
                                             text=endstr,
                                             username='Out of Queue Bot',
