@@ -75,7 +75,7 @@ def processEvent(e):
     for eng in s.TRAINING_IDS:
         if eng in msg:
             flag = eng
-    print(f"Flag after for loop: {flag}")
+    #print(f"Flag after for loop: {flag}")
     if flag != False:
         thread = e["event"]["ts"]
         s.slackBotUser.chat.post_message(channel=e["event"]["channel"],

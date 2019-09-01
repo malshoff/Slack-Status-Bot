@@ -134,6 +134,10 @@ class SlackBot(object):
             self.roster.TODAYS_DATE)
         for eng in self.inTraining: 
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
+
+        if len(self.inTraining) == 0:
+            endstr += "No one today!"
+            
         self.slackBotUser.chat.post_message(channel='#sup-pcf-staff',
                                             text=endstr,
                                             username='Out of Queue Bot',
