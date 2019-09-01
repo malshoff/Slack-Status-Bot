@@ -121,7 +121,7 @@ class SlackBot(object):
             endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
         if len(self.inTraining) == 0:
-            endstr = "No one today!"
+            endstr += "No one today!"
 
         self.slackBotUser.chat.post_message(channel='#ooq-test',
                                             text=endstr,
