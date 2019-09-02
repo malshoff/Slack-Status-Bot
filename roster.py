@@ -50,7 +50,8 @@ class Roster(object):
                 'first_name': person['first_name'],
                 'last_name': person['last_name'],
                 'email': person['email'],
-                'timezone': person['timezone']
+                'timezone': person['timezone'],
+                'date': self.TODAYS_DATE.strftime("%m/%d/%Y")
             })
         
         employees.insert_many(tzPeople)
@@ -72,13 +73,13 @@ class Roster(object):
 
         out.update(
             {'date': str(self.TODAYS_DATE)},
-            {'$set': res},
+            {'$set': {'eng':res}},
             upsert=True
         )
 
     def getOutOfQueue(self):
         outToday = out.find_one({str(self.TODAYS_DATE):{'$exists': True}})
-        return outToday[str(self.TODAYS_DATE)]
+        return outToday
        
 
 
