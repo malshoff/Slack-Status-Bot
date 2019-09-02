@@ -4,6 +4,7 @@ import datetime
 from requests.auth import HTTPBasicAuth
 from slacker import Slacker
 from pymongo import MongoClient
+from pymongo import ReplaceOne
 import os
 from collections import defaultdict
 from pytz import timezone 
@@ -52,10 +53,19 @@ class Roster(object):
                 'last_name': person['last_name'],
                 'email': person['email'],
                 'timezone': person['timezone'],
+                'tags': person['tags'],
                 'date': self.TODAYS_DATE
             })
-        
-        employees.insert_many(tzPeople)
+
+        #TODO: Change to update_many, check for todays date, $set tzpeople
+        employees.bulk_write([
+            ReplaceOne(
+            {'employee_id': {'$exists': True}},
+            p,
+            upsert=True
+        )
+        for p in tzPeople
+        ])
 
 
     def setOutOfQueue(self):
