@@ -34,15 +34,19 @@ COMMANDS = {
     "test"
 }
 
+PRIVILIGED_COMMANDS = {
+    "listall",
+    "runall"
+}
+
 
 @app.route("/", methods=["GET"])
 def pre_install():
     name = request.args['name'].split(' ')
     first_name = name[0]
+    last_name = name[-1]
     if len(name) == 3:
-        last_name = name[2]
-    else:
-        last_name = name[1]
+        first_name += '+' + name[1]
 
     return f'<a href="https://slack.com/oauth/authorize?scope={ oauth_scope }&client_id={ client_id }&state={first_name}+{last_name}">Authorize App (you will be redirected to Slack)</a>'
 
@@ -51,9 +55,15 @@ def pre_install():
 def post_install():
   # Retrieve the auth code from the request params
     auth_code = request.args['code']
-    names = request.args['state'].split(' ')
-    first_name = names[0]
-    last_name = names[1]
+    name = request.args['state'].split(' ')
+
+    first_name = name[0]
+
+    if len(name) == 3:
+        last_name = name[2]
+        first_name += ' ' + name[1]
+    else:
+        last_name = name[1]
 
     client = slack.WebClient(token="")
 
@@ -93,9 +103,12 @@ def execCommand():
     if command not in COMMANDS:
         return flask.redirect(404)
 
+    if command in PRIVILIGED_COMMANDS and user_id != "UF57DA49F":
+        return "You are not authorized to use this command. Please reach out in #sup-ooq for help."
+
     # enqueue the command
     choose_command.apply_async(args=(command, user_id), queue="commands")
-    return "Executing command. This may take a few seconds."
+    return "Executing command."
 
 
 @app.route("/events", methods=["POST"])

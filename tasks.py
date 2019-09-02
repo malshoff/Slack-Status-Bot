@@ -49,6 +49,7 @@ def choose_command(command, user_id):
     elif command == "run":
         cur = employees.find_one({"user_id": user_id})
         return run(cur, user_id)
+        
     elif command == "runall":
         if user_id == 'UF57DA49F':  # Malachi's id
             runAll()

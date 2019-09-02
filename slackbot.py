@@ -50,7 +50,13 @@ class SlackBot(object):
     def buildURL(self, name):
         name = name.split()
         first_name = name[0]
-        last_name = name[-1]
+
+        if len(name) == 3:
+            last_name = name[2]
+            first_name += '+' + name[1]
+        else:
+            last_name = name[1]
+            
         url = f'https://queue.apps.pcfone.io/?name={first_name}+{last_name}'
         return url
 
