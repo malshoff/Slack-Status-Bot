@@ -2,31 +2,30 @@
 Slack bot that modifies user statuses according to their current availability (pulled from the Roster)
 
 ## Supported Commands:
-Authorize the Out of Queue Bot and/or have it update your status on your OOQ day manually:
+
 
 ```
 /ooq run
 ```
-
-List Out of Queue engineers in the #sup-ooq channel:
+Authorize the Out of Queue Bot and/or have it update your status on your OOQ day manually. This is ran automatically every day at 8:30 AM, but can be executed manually.
 
 ```
 /ooq list
 ```
+List Out of Queue engineers in the #ooq-test channel:
 
-List Out of Queue engineers in the #sup-pcf-staff (only specific users may use this):
 
 ```
 /ooq listall
 ```
+List Out of Queue engineers in the #sup-pcf-staff and #support-data-amer channels (only specific users may use this command):
 
-Update the status of all OOQ engineers (only specific users may use this):
 
 ```
 /ooq runall
 ```
+Update the status of all OOQ engineers (only specific users may use this).
 
-Refresh the slack bot:
 
 ```
 /ooq refresh
