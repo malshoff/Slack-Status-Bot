@@ -7,35 +7,37 @@ from pymongo import MongoClient
 from pymongo import ReplaceOne
 import os
 from collections import defaultdict
-from pytz import timezone 
+from pytz import timezone
 
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 out = db.ooq
 timezones = db.timezones
-employees = db.employees 
+employees = db.employees
+
 
 class Roster(object):
 
     def __init__(self, passwordFile, tz):
-        self.ENGINEER_IDS = set() #ID's of engineers in given timezone
+        self.ENGINEER_IDS = set()  # ID's of engineers in given timezone
         self.EMPLOYEES = {}
         self.UNAVAILABLE = {9, 10, 12, 13, 14, 15, 16}
-        self.TODAYS_DATE = datetime.datetime.now().replace(tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
+        self.TODAYS_DATE = datetime.datetime.now().replace(
+            tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
         self.TRAINING_CODES = {11}
         self.tz = tz
         with open(str(passwordFile), 'r') as creds:
             self.credentials = json.loads(creds.read())
-    
+
     def addFields(self):
         employees.update({},
-                          {'$set' : {
-                              "user_id":False, 'access_token':False
-                              }
-                          },
-                          upsert=False,
-                          multi=True)
+                         {'$set': {
+                             "user_id": False, 'access_token': False
+                         }
+        },
+            upsert=False,
+            multi=True)
 
     def getCategories(self):
         r = requests.get('http://pivotal-roster-api.cfapps.io/api/employees/tag/', auth=(
@@ -43,10 +45,10 @@ class Roster(object):
             self.credentials['pass'])
         )
         with open("tags.txt", "w+") as f:
-            json.dump(r.json(),f,indent=2)
+            json.dump(r.json(), f, indent=2)
 
     def getTimezones(self):
-        
+
         print("Finding tz" + str(self.tz))
         ea = timezones.find_one({self.tz: {'$exists': True}})
         return set(ea[self.tz])
@@ -64,8 +66,8 @@ class Roster(object):
                 self.ENGINEER_IDS.add(person['id'])
 
             tzPeople.append({
-                'tags':person['tags'],
-                'employee_id':person['id'],
+                'tags': person['tags'],
+                'employee_id': person['id'],
                 'first_name': person['first_name'],
                 'last_name': person['last_name'],
                 'email': person['email'],
@@ -73,16 +75,14 @@ class Roster(object):
                 'date': self.TODAYS_DATE
             })
 
-       
         employees.bulk_write([
             ReplaceOne(
-            {'employee_id': p['employee_id']},
-            p,
-            upsert=True
-        )
-        for p in tzPeople
+                {'employee_id': p['employee_id']},
+                p,
+                upsert=True
+            )
+            for p in tzPeople
         ])
-
 
     def setOutOfQueue(self):
 
@@ -101,14 +101,13 @@ class Roster(object):
 
         out.update(
             {'date': str(self.TODAYS_DATE)},
-            {'$set': {'eng':res}},
+            {'$set': {'eng': res}},
             upsert=True
         )
 
     def getOutOfQueue(self):
-        outToday = out.find_one({str(self.TODAYS_DATE):{'$exists': True}})
+        outToday = out.find_one({str(self.TODAYS_DATE): {'$exists': True}})
         return outToday
-       
 
 
 '''print(slack.usergroups.users.list('SCY2D900P'))'''  # ID of usergroup east-pcf-ce-team
