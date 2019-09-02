@@ -20,6 +20,9 @@ class SlackBot(object):
         self.TRAINING_IDS = self.trainingIds()
 
     def isInDB(self, employee):
+        if not employee:
+            return False
+
         client = MongoClient(f"{self.CONNECT_STRING}")
         db = client.queue  # queue database
         users = db.users  # users collection
@@ -33,6 +36,10 @@ class SlackBot(object):
     # Return a set of Slack user IDs of CEs that are Out of Queue today
     def trainingIds(self):
         idset = set()
+
+        if not self.inTraining:
+            return idset
+
         for t in self.inTraining:
             cur = self.isInDB(t)
             if cur:
@@ -60,12 +67,18 @@ class SlackBot(object):
         return url
 
     def isInTraining(self, employee):
+        if not self.inTraining:
+            return False
+
         for eng in self.inTraining:
             if employee["first_name"] == eng["first_name"] and employee["last_name"] == eng["last_name"]:
                 return True
         return False
 
     def setStatus(self, employee):
+        if not employee:
+            return
+            
         cur = self.isInDB(employee)
         tomorrow = datetime.now() + timedelta(days=1)
         unix_date = mktime(tomorrow.timetuple())
@@ -117,11 +130,12 @@ class SlackBot(object):
     def msgOutOfQueue(self):
         endstr = "Hello team! The following engineers are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
-        for eng in self.inTraining:
-            endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
-        if len(self.inTraining) == 0:
+        if not self.inTraining or len(self.inTraining) == 0:
             endstr += "No one today!"
+        else:
+            for eng in self.inTraining:
+                endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
         self.slackBotUser.chat.post_message(channel='#ooq-test',
                                             text=endstr,
@@ -132,12 +146,13 @@ class SlackBot(object):
     def msgAllStaff(self):
         endstr = "Hello team! The following engineers are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
-        for eng in self.inTraining: 
-            endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
-        if len(self.inTraining) == 0:
+        if not self.inTraining or len(self.inTraining) == 0:
             endstr += "No one today!"
-            
+        else:
+            for eng in self.inTraining:
+                endstr += eng["first_name"] + " " + eng["last_name"] + ","
+
         self.slackBotUser.chat.post_message(channel='#sup-pcf-staff',
                                             text=endstr,
                                             username='Out of Queue Bot',

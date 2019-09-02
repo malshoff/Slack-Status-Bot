@@ -6,6 +6,9 @@ from roster import Roster
 s = SlackBot()
 rost = Roster("password.json", "EAST")
 
+rost.setEmployees()
+rost.setOutOfQueue()
+
 for engineer in s.inTraining:
     s.setStatus(engineer)
 
