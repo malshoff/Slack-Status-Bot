@@ -62,7 +62,7 @@ def choose_command(command, user_id):
 @app.task
 def processEvent(e):
     if not s.TRAINING_IDS:
-        print("There are no engineers in training today")
+        print("Message from processEvent task: There are no engineers in training today")
         return
 
     if e["event"].get("bot_id"):
