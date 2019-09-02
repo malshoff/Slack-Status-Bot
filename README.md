@@ -10,6 +10,7 @@ Slack bot that modifies user statuses according to their current availability (p
 Authorize the Out of Queue Bot and/or have it update your status on your OOQ day manually. This is ran automatically every day at 8:30 AM, but can be executed manually.
 
 
+
 ```
 /ooq list
 ```
