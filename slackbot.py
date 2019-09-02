@@ -19,7 +19,7 @@ class SlackBot(object):
         self.slackBotUser = Slacker(self.BOT_TOKEN)
         self.TRAINING_IDS = self.trainingIds()
 
-    def isInDB(self, employee):
+    '''def isInDB(self, employee):
         if not employee:
             return False
 
@@ -31,7 +31,7 @@ class SlackBot(object):
         if not cur:
             return False
         else:
-            return cur
+            return cur'''
 
     # Return a set of Slack user IDs of CEs that are Out of Queue today
     def trainingIds(self):
@@ -41,9 +41,9 @@ class SlackBot(object):
             return idset
 
         for t in self.inTraining:
-            cur = self.isInDB(t)
-            if cur:
-                idset.add(cur['user_id'])
+            
+            if 'user_id' in t and t['user_id']:
+                idset.add(t['user_id'])
         return idset
 
     # returns slack user ID and username of employee as a tuple
@@ -79,28 +79,28 @@ class SlackBot(object):
         if not employee:
             return
             
-        cur = self.isInDB(employee)
+        
         tomorrow = datetime.now() + timedelta(days=1)
         unix_date = mktime(tomorrow.timetuple())
 
-        if cur:
-            if self.isInTraining(cur):
-                slack = Slacker(cur['access_token'])
-                slack.users.profile.set(user=cur['user_id'], name='status_text',
+        if 'user_id' in employee and employee['user_id']:
+            if self.isInTraining(employee):
+                slack = Slacker(employee['access_token'])
+                slack.users.profile.set(user=employee['user_id'], name='status_text',
                                         value='Training')
-                slack.users.profile.set(user=cur['user_id'], name='status_emoji',
+                slack.users.profile.set(user=employee['user_id'], name='status_emoji',
                                         value=':thinkingman:')
-                slack.users.profile.set(user=cur['user_id'], name='status_expiration',
+                slack.users.profile.set(user=employee['user_id'], name='status_expiration',
                                         value=unix_date)
                 slack.dnd.set_snooze(num_minutes=1440)
                 self.slackBotUser.chat.post_message(channel='#ooq-test',
-                                                    text=f'{cur["first_name"]} is Out of Queue Today!',
+                                                    text=f'{employee["first_name"]} is Out of Queue Today!',
                                                     username='Out of Queue Bot'
                                                     )
                 print("SUCCESS!!!!!!!!")
 
             else:
-                self.slackBotUser.chat.post_message(channel=cur['user_id'],
+                self.slackBotUser.chat.post_message(channel=employee['user_id'],
                                                     text="You will be notified and have your status changed on your OOQ day!",
                                                     username='Out of Queue Bot',
                                                     link_names=1,

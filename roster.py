@@ -31,7 +31,7 @@ class Roster(object):
     def addFields(self):
         employees.update({},
                           {'$set' : {
-                              "user_id":"", 'access_token':""
+                              "user_id":False, 'access_token':False
                               }
                           },
                           upsert=False,
@@ -73,7 +73,7 @@ class Roster(object):
                 'date': self.TODAYS_DATE
             })
 
-        #TODO: Change to update_many, check for todays date, $set tzpeople
+       
         employees.bulk_write([
             ReplaceOne(
             {'employee_id': p['employee_id']},
