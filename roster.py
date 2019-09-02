@@ -27,13 +27,23 @@ class Roster(object):
         self.tz = tz
         with open(str(passwordFile), 'r') as creds:
             self.credentials = json.loads(creds.read())
-        
+    
+    def addFields(self):
+        employees.update({},
+                          {'$set' : {
+                              "user_id":"", 'access_token':""
+                              }
+                          },
+                          upsert=False,
+                          multi=True)
+
     def getCategories(self):
-        r = requests.get('http://pivotal-roster-api.cfapps.io/api/employees/categories/', auth=(
+        r = requests.get('http://pivotal-roster-api.cfapps.io/api/employees/tag/', auth=(
             self.credentials['user'],
             self.credentials['pass'])
         )
-        print(r.json())
+        with open("tags.txt", "w+") as f:
+            json.dump(r.json(),f,indent=2)
 
     def getTimezones(self):
         

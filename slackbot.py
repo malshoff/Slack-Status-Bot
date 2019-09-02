@@ -25,8 +25,8 @@ class SlackBot(object):
 
         client = MongoClient(f"{self.CONNECT_STRING}")
         db = client.queue  # queue database
-        users = db.users  # users collection
-        cur = users.find_one(
+        employees = db.employees  # users collection
+        cur = employees.find_one(
             {"first_name": employee['first_name'], "last_name": employee['last_name']})
         if not cur:
             return False

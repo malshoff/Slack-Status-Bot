@@ -1,0 +1,194 @@
+[
+  {
+    "id": 3,
+    "name": "America (EAST)",
+    "short_name": "AMERE",
+    "allday": false,
+    "hidden": false,
+    "category": 1
+  },
+  {
+    "id": 44,
+    "name": "America (WEST)",
+    "short_name": "AMERW",
+    "allday": false,
+    "hidden": false,
+    "category": 1
+  },
+  {
+    "id": 1,
+    "name": "Asia Pacific Japan & Korea",
+    "short_name": "APJK",
+    "allday": false,
+    "hidden": false,
+    "category": 1
+  },
+  {
+    "id": 15,
+    "name": "Business Critical Support",
+    "short_name": "BCS",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 37,
+    "name": "CE Data",
+    "short_name": "WECED",
+    "allday": false,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 36,
+    "name": "CE Data SP",
+    "short_name": "WECEDS",
+    "allday": true,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 38,
+    "name": "CE Gemfire",
+    "short_name": "WECEG",
+    "allday": true,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 41,
+    "name": "CE PaaS",
+    "short_name": "WECEP",
+    "allday": false,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 40,
+    "name": "CE PaaS SP",
+    "short_name": "WECEPS",
+    "allday": true,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 39,
+    "name": "CE PaaS SPM/Anchor",
+    "short_name": "WECEPSA",
+    "allday": true,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 42,
+    "name": "CSR",
+    "short_name": "WECSR",
+    "allday": false,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 8,
+    "name": "Customer Engineer",
+    "short_name": "CE",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 9,
+    "name": "Customer Service Representative",
+    "short_name": "CSR",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 11,
+    "name": "Escalation Manager",
+    "short_name": "EM",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 2,
+    "name": "Europe Middle East & Africa",
+    "short_name": "EMEA",
+    "allday": false,
+    "hidden": false,
+    "category": 1
+  },
+  {
+    "id": 7,
+    "name": "Gemfire",
+    "short_name": "GEMFIRE",
+    "allday": false,
+    "hidden": false,
+    "category": 3
+  },
+  {
+    "id": 5,
+    "name": "Greenplum",
+    "short_name": "GPDB",
+    "allday": false,
+    "hidden": false,
+    "category": 3
+  },
+  {
+    "id": 6,
+    "name": "Hawq",
+    "short_name": "HDB",
+    "allday": false,
+    "hidden": false,
+    "category": 3
+  },
+  {
+    "id": 12,
+    "name": "Manager",
+    "short_name": "MANAGER",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 43,
+    "name": "On Call Manager",
+    "short_name": "WEOCM",
+    "allday": false,
+    "hidden": true,
+    "category": 4
+  },
+  {
+    "id": 18,
+    "name": "Platform As A Service",
+    "short_name": "PAAS",
+    "allday": false,
+    "hidden": false,
+    "category": 3
+  },
+  {
+    "id": 17,
+    "name": "Product Component Anchor",
+    "short_name": "Anchor",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 13,
+    "name": "Special Procedure",
+    "short_name": "SP",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  },
+  {
+    "id": 16,
+    "name": "Support Product Component Manager",
+    "short_name": "SPM",
+    "allday": false,
+    "hidden": false,
+    "category": 2
+  }
+]

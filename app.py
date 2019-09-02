@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
-users = db.users
+employees = db.employees
 
 
 s = SlackBot()
@@ -68,14 +68,12 @@ def post_install():
     person = {
         'access_token': response['access_token'],
         'user_id': response['user_id'],
-        'first_name': first_name,
-        'last_name': last_name,
     }
 
-    users.update(
-        {'user_id': response['user_id']},
+    employees.update(
+        {'first_name': first_name, 'last_name':last_name},
         {'$set': person},
-        upsert=True
+        upsert=False 
     )
 
     run(person, response['user_id'])

@@ -23,7 +23,7 @@ app = Celery('tasks', broker=BROKER_URL)
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
-users = db.users
+employees = db.employees
 s = SlackBot()
 
 @app.task
@@ -47,7 +47,7 @@ def choose_command(command, user_id):
             listAll()
 
     elif command == "run":
-        cur = users.find_one({"user_id": user_id})
+        cur = employees.find_one({"user_id": user_id})
         return run(cur, user_id)
     elif command == "runall":
         if user_id == 'UF57DA49F':  # Malachi's id

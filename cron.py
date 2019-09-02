@@ -9,8 +9,10 @@ rost = Roster("password.json", "EAST")
 rost.setEmployees()
 rost.setOutOfQueue()
 
-for engineer in s.inTraining:
-    s.setStatus(engineer)
+if s.inTraining:
+    for engineer in s.inTraining:
+        s.setStatus(engineer)
 
 s.msgOutOfQueue()
 s.msgAllStaff()
+
