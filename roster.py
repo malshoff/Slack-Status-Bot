@@ -6,6 +6,7 @@ from slacker import Slacker
 from pymongo import MongoClient
 import os
 from collections import defaultdict
+from pytz import timezone 
 
 CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
@@ -20,7 +21,7 @@ class Roster(object):
         self.ENGINEER_IDS = set() #ID's of engineers in given timezone
         self.EMPLOYEES = {}
         self.UNAVAILABLE = {9, 10, 12, 13, 14, 15, 16}
-        self.TODAYS_DATE = datetime.date.today()
+        self.TODAYS_DATE = datetime.datetime.now().replace(tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
         self.TRAINING_CODES = {11}
         self.tz = tz
         with open(str(passwordFile), 'r') as creds:
@@ -51,7 +52,7 @@ class Roster(object):
                 'last_name': person['last_name'],
                 'email': person['email'],
                 'timezone': person['timezone'],
-                'date': self.TODAYS_DATE.strftime("%m/%d/%Y")
+                'date': self.TODAYS_DATE
             })
         
         employees.insert_many(tzPeople)
@@ -62,6 +63,7 @@ class Roster(object):
         r = requests.get('https://pivotal-roster-api.cfapps.io/api/schedule/employee_schedule?active=true&audit_date=' +
                          str(self.TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
         engs = r.json()
+        print(engs)
         res = []
 
         for eng in engs:
@@ -83,4 +85,4 @@ class Roster(object):
        
 
 
-'''print(slack.usergroups.users.list('SCY2D900P'))'''  # ID of usergroup
+'''print(slack.usergroups.users.list('SCY2D900P'))'''  # ID of usergroup east-pcf-ce-team

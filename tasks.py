@@ -3,6 +3,7 @@ import os
 import json
 from slackbot import SlackBot
 from pymongo import MongoClient
+from roster import Roster
 
 vcap_services = os.getenv('VCAP_SERVICES', None)
 vcap_services = json.loads(vcap_services)
@@ -23,11 +24,11 @@ CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 users = db.users
-
+s = SlackBot()
 
 @app.task
 def testtask(command, user_id):
-    s = SlackBot()
+    
     s.slackBotUser.chat.post_message(channel='#ooq-test',
                                      text="testing with the Redis queue worked!",
                                      username='Out of Queue Bot',
@@ -60,7 +61,7 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
-    s = SlackBot()
+    
 
     if e["event"].get("bot_id"):
         return "This is a bot!"
@@ -87,11 +88,13 @@ def processEvent(e):
 
 
 def refresh():
-    return "deprecated"
+    rost = Roster("password.json", "EAST")
+    rost.setEmployees()
+    rost.setOutOfQueue()
 
 
 def run(eng, user_id):
-    s = SlackBot()
+   
 
     if eng:
         s.setStatus(eng)
@@ -103,7 +106,7 @@ def run(eng, user_id):
 
 
 def runAll():
-    s = SlackBot()
+   
     if not s.inTraining:
         return False
     for engineer in s.inTraining:
@@ -111,10 +114,10 @@ def runAll():
 
 
 def listTestChannel():
-    s = SlackBot()
+    
     s.msgOutOfQueue()
 
 
 def listAll():
-    s = SlackBot()
+    
     s.msgAllStaff()
