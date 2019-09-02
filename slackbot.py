@@ -19,19 +19,6 @@ class SlackBot(object):
         self.slackBotUser = Slacker(self.BOT_TOKEN)
         self.TRAINING_IDS = self.trainingIds()
 
-    '''def isInDB(self, employee):
-        if not employee:
-            return False
-
-        client = MongoClient(f"{self.CONNECT_STRING}")
-        db = client.queue  # queue database
-        employees = db.employees  # users collection
-        cur = employees.find_one(
-            {"first_name": employee['first_name'], "last_name": employee['last_name']})
-        if not cur:
-            return False
-        else:
-            return cur'''
 
     # Return a set of Slack user IDs of CEs that are Out of Queue today
     def trainingIds(self):
@@ -44,6 +31,7 @@ class SlackBot(object):
 
             if 'user_id' in t and t['user_id']:
                 idset.add(t['user_id'])
+
         return idset
 
     # returns slack user ID and username of employee as a tuple
@@ -127,7 +115,7 @@ class SlackBot(object):
                                             )
 
     def msgOutOfQueue(self):
-        endstr = "Hello team! The following engineers are out of queue on {}: ".format(
+        endstr = "Hello team! The following CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
@@ -149,11 +137,11 @@ class SlackBot(object):
     def msgPAAS(self):
         PAAS_TAGS = {39,40,41}  # Tags for data engineers
 
-        endstr = "Hello team! The following PaaS engineers are out of queue on {}: ".format(
+        endstr = "Hello team! The following PaaS CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
-            endstr = "Hello team! No PaaS engineers are out of queue today. "
+            endstr = "Hello team! No PaaS CEs are out of queue today. "
 
         else:
             for eng in self.inTraining:
@@ -174,11 +162,11 @@ class SlackBot(object):
     def msgData(self):
         DATA_TAGS = {36, 37, 38}  # Tags for data engineers
 
-        endstr = "Hello team! The following data engineers are out of queue on {}: ".format(
+        endstr = "Hello team! The following data CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
-            endstr = "Hello team! No data engineers are out of queue today."
+            endstr = "Hello team! No data CEs are out of queue today."
 
         else:
             for eng in self.inTraining:
