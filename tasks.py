@@ -100,7 +100,7 @@ def run(eng, user_id):
 
     if eng:
         s.setStatus(eng)
-        return "Ran set status!"
+        return "From run(): Ran set status!"
     else:
         info = s.getUserById(user_id)
         url = s.buildURL(info[1])
