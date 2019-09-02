@@ -114,6 +114,7 @@ def execCommand():
 @app.route("/events", methods=["POST"])
 def events():
     r = request.get_json()
+    print(r)
     processEvent.apply_async(args=(r,), queue="events")
     return "received event"
 
