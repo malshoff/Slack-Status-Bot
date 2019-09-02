@@ -104,6 +104,8 @@ def run(eng, user_id):
 
 def runAll():
     s = SlackBot()
+    if not s.inTraining:
+        return False
     for engineer in s.inTraining:
         s.setStatus(engineer)
 
