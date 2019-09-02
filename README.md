@@ -32,4 +32,4 @@ Refresh the slack bot:
 /ooq refresh
 ```
 
-Please make sure not to use this command if it is not necessary (i.e. it is not picking up the current out of queue users), it is a heavy operation.
+Update the out of queue db with current CEs. This is performed automatically every morning at 8:30 EST, but can be executed by command as well. Please make sure to use this command only when necessary (i.e. it is not picking up the current out of queue users, or you updated your status after 8:30 EST)
