@@ -9,10 +9,12 @@ Slack bot that modifies user statuses according to their current availability (p
 ```
 Authorize the Out of Queue Bot and/or have it update your status on your OOQ day manually. This is ran automatically every day at 8:30 AM, but can be executed manually.
 
+
 ```
 /ooq list
 ```
-List Out of Queue engineers in the #ooq-test channel:
+List Out of Queue engineers in the #ooq-test channel.
+
 
 
 ```
@@ -21,10 +23,12 @@ List Out of Queue engineers in the #ooq-test channel:
 List Out of Queue engineers in the #sup-pcf-staff and #support-data-amer channels (only specific users may use this command):
 
 
+
 ```
 /ooq runall
 ```
 Update the status of all OOQ engineers (only specific users may use this).
+
 
 
 ```
