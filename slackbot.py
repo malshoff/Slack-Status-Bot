@@ -41,7 +41,7 @@ class SlackBot(object):
             return idset
 
         for t in self.inTraining:
-            
+
             if 'user_id' in t and t['user_id']:
                 idset.add(t['user_id'])
         return idset
@@ -78,8 +78,7 @@ class SlackBot(object):
     def setStatus(self, employee):
         if not employee:
             return
-            
-        
+
         tomorrow = datetime.now() + timedelta(days=1)
         unix_date = mktime(tomorrow.timetuple())
 
@@ -144,20 +143,53 @@ class SlackBot(object):
                                             )
 
     def msgAllStaff(self):
-        endstr = "Hello team! The following engineers are out of queue on {}: ".format(
+        self.msgPAAS()
+        self.msgData()
+
+    def msgPAAS(self):
+        PAAS_TAGS = {39,40,41}  # Tags for data engineers
+
+        endstr = "Hello team! The following PAAS engineers are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
             endstr += "No one today!"
+
         else:
             for eng in self.inTraining:
-                endstr += eng["first_name"] + " " + eng["last_name"] + ","
+                flag = False
+                for tag in eng['tags']:
+                    if tag in PAAS_TAGS:
+                        flag = True
+                        break
+                if flag:
+                    endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
         self.slackBotUser.chat.post_message(channel='#sup-pcf-staff',
                                             text=endstr,
                                             username='Out of Queue Bot',
                                             link_names=1
                                             )
+
+    def msgData(self):
+        DATA_TAGS = {36, 37, 38}  # Tags for data engineers
+
+        endstr = "Hello team! The following data engineers are out of queue on {}: ".format(
+            self.roster.TODAYS_DATE)
+
+        if not self.inTraining or len(self.inTraining) == 0:
+            endstr += "No one today!"
+
+        else:
+            for eng in self.inTraining:
+                flag = False
+                for tag in eng['tags']:
+                    if tag in DATA_TAGS:
+                        flag = True
+                        break
+                if flag:
+                    endstr += eng["first_name"] + " " + eng["last_name"] + ","
+
         self.slackBotUser.chat.post_message(channel='#support-data-amer',
                                             text=endstr,
                                             username='Out of Queue Bot',
