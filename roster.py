@@ -28,6 +28,12 @@ class Roster(object):
         with open(str(passwordFile), 'r') as creds:
             self.credentials = json.loads(creds.read())
         
+    def getCategories(self):
+        r = requests.get('http://pivotal-roster-api.cfapps.io/api/employees/categories/', auth=(
+            self.credentials['user'],
+            self.credentials['pass'])
+        )
+        print(r.json())
 
     def getTimezones(self):
         
@@ -48,19 +54,19 @@ class Roster(object):
                 self.ENGINEER_IDS.add(person['id'])
 
             tzPeople.append({
+                'tags':person['tags'],
                 'employee_id':person['id'],
                 'first_name': person['first_name'],
                 'last_name': person['last_name'],
                 'email': person['email'],
                 'timezone': person['timezone'],
-                'tags': person['tags'],
                 'date': self.TODAYS_DATE
             })
 
         #TODO: Change to update_many, check for todays date, $set tzpeople
         employees.bulk_write([
             ReplaceOne(
-            {'employee_id': {'$exists': True}},
+            {'employee_id': p['employee_id']},
             p,
             upsert=True
         )
