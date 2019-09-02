@@ -4,7 +4,7 @@ import datetime
 from requests.auth import HTTPBasicAuth
 from slacker import Slacker
 from pymongo import MongoClient
-from pymongo import ReplaceOne
+from pymongo import UpdateOne
 import os
 from collections import defaultdict
 from pytz import timezone
@@ -30,14 +30,20 @@ class Roster(object):
         with open(str(passwordFile), 'r') as creds:
             self.credentials = json.loads(creds.read())
 
-    def addFields(self):
-        employees.update({},
-                         {'$set': {
-                             "user_id": False, 'access_token': False
-                         }
-        },
-            upsert=False,
-            multi=True)
+    #migrating users collection to employees
+    def addAccessTokens(self):
+        users = db.users
+
+        all = users.find()
+        for a in all:
+            employees.update({'first_name':a['first_name'], 'last_name':a['last_name']},
+            
+                            {'$set': {
+                                "user_id": a['user_id'], 'access_token': a['access_token']
+                            }
+            },
+                upsert=False,
+                )
 
     def getCategories(self):
         r = requests.get('http://pivotal-roster-api.cfapps.io/api/employees/tag/', auth=(
@@ -76,9 +82,9 @@ class Roster(object):
             })
 
         employees.bulk_write([
-            ReplaceOne(
+            UpdateOne(
                 {'employee_id': p['employee_id']},
-                p,
+                {'$set': p},
                 upsert=True
             )
             for p in tzPeople
