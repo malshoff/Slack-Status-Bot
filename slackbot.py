@@ -12,7 +12,6 @@ import os
 class SlackBot(object):
 
     def __init__(self, tz="EAST"):
-        self.CONNECT_STRING = os.environ["CONNECT_STRING"]
         self.roster = Roster("password.json", tz)
         self.inTraining = self.roster.getOutOfQueue()  # list of training engineers
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
