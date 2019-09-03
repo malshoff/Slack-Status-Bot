@@ -68,7 +68,7 @@ class SlackBot(object):
 
     def setStatus(self, employee):
         if not employee:
-            return
+            return "setStatus: employee was empty!"
 
         tomorrow = datetime.now() + timedelta(days=1)
         unix_date = mktime(tomorrow.timetuple())

@@ -62,6 +62,8 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
+    print(f"Training IDS: {s.TRAINING_IDS}")
+    
     if not s.TRAINING_IDS:
         print("Message from processEvent task: There are no engineers in training today")
         return
@@ -88,7 +90,8 @@ def processEvent(e):
                                          link_names=1,
                                          thread_ts=thread
                                          )
-
+    else:
+        print("This message does not apply!")
 
 def refresh():
     rost = Roster("password.json", "EAST")

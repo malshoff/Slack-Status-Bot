@@ -85,8 +85,8 @@ def post_install():
         {'$set': person},
         upsert=False 
     )
-
-    run(person, response['user_id'])
+    completed = employees.find_one({'first_name': first_name, 'last_name':last_name})
+    run(completed, response['user_id'])
 
     return "Auth complete! You will receive a notification on your Out of Queue day, and your status will be updated! \n\n Please check out #sup-ooq for discussion"
 
