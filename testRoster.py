@@ -1,14 +1,34 @@
 from roster import Roster
 
+
+
 rost = Roster("password.json", "EAST")
-
-
-rost.setEmployees()
-rost.getCategories()
-rost.setOutOfQueue()
-
 q = rost.getOutOfQueue()
 
-print(q)
+'''rost.setEmployees()
+rost.getCategories()
+rost.setOutOfQueue()'''
 
-print(rost.TODAYS_DATE)
+def printQ():
+    for t in q:
+        print(t)
+        print("\n")
+
+def testTrainingIds():
+    
+    idset = set()
+    
+    
+    if not q:
+        return idset
+
+    for t in q:
+        print(t)
+        if 'user_id' in t and t['user_id']:
+            idset.add(t['user_id'])
+            print(idset)
+
+    #print(f"idset: {idset}")
+
+printQ()
+#testTrainingIds()

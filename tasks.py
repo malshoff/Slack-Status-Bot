@@ -62,8 +62,9 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
+    s = SlackBot()
     print(f"Training IDS: {s.TRAINING_IDS}")
-    
+
     if not s.TRAINING_IDS:
         print("Message from processEvent task: There are no engineers in training today")
         return
@@ -98,6 +99,7 @@ def refresh():
     rost.setEmployees()
     rost.setOutOfQueue()
     s = SlackBot()
+    print("Refresh Complete!")
 
 
 def run(eng, user_id):

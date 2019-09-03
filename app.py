@@ -6,6 +6,7 @@ import json
 from flask import Flask, request, redirect
 from pymongo import MongoClient
 from slackbot import SlackBot
+from roster import Roster
 import requests
 from threading import Thread
 from tasks import testtask, choose_command, processEvent
@@ -85,6 +86,10 @@ def post_install():
         {'$set': person},
         upsert=False 
     )
+    
+    r = Roster("password.json", "EAST")
+    r.setOutOfQueue()
+
     completed = employees.find_one({'first_name': first_name, 'last_name':last_name})
     run(completed, response['user_id'])
 
