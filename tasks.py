@@ -94,6 +94,7 @@ def refresh():
     rost = Roster("password.json", "EAST")
     rost.setEmployees()
     rost.setOutOfQueue()
+    s = SlackBot()
 
 
 def run(eng, user_id):
@@ -114,13 +115,13 @@ def runAll():
         return False
     for engineer in s.inTraining:
         s.setStatus(engineer)
+    return "ran runAll()"
 
 
 def listTestChannel():
-    
     s.msgOutOfQueue()
-
+    return "listTestChannel: ran"
 
 def listAll():
-    
     s.msgAllStaff()
+    return "listAll: ran"

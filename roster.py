@@ -95,7 +95,7 @@ class Roster(object):
         r = requests.get('https://pivotal-roster-api.cfapps.io/api/schedule/employee_schedule?active=true&audit_date=' +
                          str(self.TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
         engs = r.json()
-        print(engs)
+        #print(engs)
         res = []
 
         for eng in engs:
@@ -112,7 +112,9 @@ class Roster(object):
         )
 
     def getOutOfQueue(self):
-        outToday = out.find_one({str(self.TODAYS_DATE): {'$exists': True}})
+        outToday = out.find_one({"date":str(self.TODAYS_DATE)})
+        if outToday:
+            return outToday['eng']
         return outToday
 
 
