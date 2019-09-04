@@ -19,6 +19,10 @@ class SlackBot(object):
         self.TRAINING_IDS = self.trainingIds()
 
 
+    def refreshOOQ(self):
+        self.inTraining = self.roster.getOutOfQueue()
+        self.TRAINING_IDS = self.trainingIds()
+        
     # Return a set of Slack user IDs of CEs that are Out of Queue today
     def trainingIds(self):
         idset = set()

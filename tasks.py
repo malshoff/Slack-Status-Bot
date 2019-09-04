@@ -62,7 +62,7 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
-    s = SlackBot()
+    s.refreshOOQ()
     print(f"Training IDS: {s.TRAINING_IDS}")
 
     if not s.TRAINING_IDS:
@@ -98,12 +98,12 @@ def refresh():
     rost = Roster("password.json", "EAST")
     rost.setEmployees()
     rost.setOutOfQueue()
-    s = SlackBot()
-    print("Refresh Complete!")
+    s.refreshOOQ()
+    print(f"Refresh Complete! Value of inTraining: {s.inTraining}")
 
 
 def run(eng, user_id):
-    s = SlackBot()
+    s.refreshOOQ()
 
     if eng:
         s.setStatus(eng)
@@ -115,7 +115,7 @@ def run(eng, user_id):
 
 
 def runAll():
-    s = SlackBot()
+    s.refreshOOQ()
 
     if not s.inTraining:
         return False
@@ -125,11 +125,11 @@ def runAll():
 
 
 def listTestChannel():
-    s = SlackBot()
+    s.refreshOOQ()
     s.msgOutOfQueue()
     return "listTestChannel: ran"
 
 def listAll():
-    s = SlackBot()
+    s.refreshOOQ()
     s.msgAllStaff()
     return "listAll: ran"
