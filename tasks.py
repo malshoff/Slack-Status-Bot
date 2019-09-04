@@ -86,7 +86,7 @@ def processEvent(e):
     if flag != False:
         thread = e["event"]["ts"]
         s.slackBotUser.chat.post_message(channel=e["event"]["channel"],
-                                         text=f"Hi! <@{flag}> is out of queue today, and they may not be able to respond to this message immediately.",
+                                         text=f"Hi! <@{flag}> is out of queue today, and may not be able to respond to this message immediately.",
                                          username='Out of Queue Bot',
                                          link_names=1,
                                          thread_ts=thread
@@ -103,7 +103,7 @@ def refresh():
 
 
 def run(eng, user_id):
-   
+    s = SlackBot()
 
     if eng:
         s.setStatus(eng)
@@ -115,7 +115,8 @@ def run(eng, user_id):
 
 
 def runAll():
-   
+    s = SlackBot()
+
     if not s.inTraining:
         return False
     for engineer in s.inTraining:
@@ -124,9 +125,11 @@ def runAll():
 
 
 def listTestChannel():
+    s = SlackBot()
     s.msgOutOfQueue()
     return "listTestChannel: ran"
 
 def listAll():
+    s = SlackBot()
     s.msgAllStaff()
     return "listAll: ran"
