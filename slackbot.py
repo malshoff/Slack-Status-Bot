@@ -151,6 +151,7 @@ class SlackBot(object):
             endstr = "Hello team! No PaaS CEs are out of queue today. "
 
         else:
+            addStr = ""
             for eng in self.inTraining:
                 flag = False
                 for tag in eng['tags']:
@@ -158,7 +159,12 @@ class SlackBot(object):
                         flag = True
                         break
                 if flag:
-                    endstr += eng["first_name"] + " " + eng["last_name"] + ","
+                    addStr += eng["first_name"] + " " + eng["last_name"] + ","
+
+        if not addStr:
+            endstr = "Hello team! No data CEs are out of queue today."
+        else:
+            endstr += addStr
 
         self.slackBotUser.chat.post_message(channel='#sup-pcf-staff',
                                             text=endstr,
