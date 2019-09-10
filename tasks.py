@@ -68,6 +68,7 @@ def processEvent(e):
 
     if not s.TRAINING_IDS:
         print("Message from processEvent task: There are no engineers in training today")
+        s.refreshOOQ()
         return
 
     if e["event"].get("bot_id"):
