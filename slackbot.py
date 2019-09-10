@@ -143,7 +143,7 @@ class SlackBot(object):
 
     def msgPAAS(self):
         PAAS_TAGS = {39,40,41}  # Tags for data engineers
-
+        addStr = ""
         endstr = "Hello team! The following PaaS CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
 
@@ -151,7 +151,7 @@ class SlackBot(object):
             endstr = "Hello team! No PaaS CEs are out of queue today. "
 
         else:
-            addStr = ""
+            
             for eng in self.inTraining:
                 flag = False
                 for tag in eng['tags']:
@@ -177,12 +177,11 @@ class SlackBot(object):
 
         endstr = "Hello team! The following data CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
-
+        addStr = ""
         if not self.inTraining or len(self.inTraining) == 0:
             endstr = "Hello team! No data CEs are out of queue today."
 
         else:
-            addStr = ""
             for eng in self.inTraining:
                 flag = False
                 for tag in eng['tags']:
