@@ -3,11 +3,15 @@ import json
 from slackbot import SlackBot
 from roster import Roster
 
-s = SlackBot()
+
 rost = Roster("password.json", "EAST")
 
 rost.setEmployees()
 rost.setOutOfQueue()
+
+s = SlackBot()
+print("From cron.py")
+print(s.inTraining)
 
 if s.inTraining:
     for engineer in s.inTraining:

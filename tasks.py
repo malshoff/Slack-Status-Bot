@@ -62,7 +62,8 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
-    s.refreshOOQ()
+    
+    print(f"Training Engineers: {s.inTraining}")
     print(f"Training IDS: {s.TRAINING_IDS}")
 
     if not s.TRAINING_IDS:
@@ -103,7 +104,7 @@ def refresh():
 
 
 def run(eng, user_id):
-    s.refreshOOQ()
+   
 
     if eng:
         s.setStatus(eng)
@@ -115,7 +116,7 @@ def run(eng, user_id):
 
 
 def runAll():
-    s.refreshOOQ()
+  
 
     if not s.inTraining:
         return False
@@ -125,11 +126,11 @@ def runAll():
 
 
 def listTestChannel():
-    s.refreshOOQ()
+    
     s.msgOutOfQueue()
     return "listTestChannel: ran"
 
 def listAll():
-    s.refreshOOQ()
+   
     s.msgAllStaff()
     return "listAll: ran"
