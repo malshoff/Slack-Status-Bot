@@ -62,13 +62,12 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
-    
+    s.refreshOOQ()
     print(f"Training Engineers: {s.inTraining}")
     print(f"Training IDS: {s.TRAINING_IDS}")
 
     if not s.TRAINING_IDS:
         print("Message from processEvent task: There are no engineers in training today")
-        s.refreshOOQ()
         return
 
     if e["event"].get("bot_id"):
