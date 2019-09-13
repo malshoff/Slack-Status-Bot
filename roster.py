@@ -30,20 +30,6 @@ class Roster(object):
         with open(str(passwordFile), 'r') as creds:
             self.credentials = json.loads(creds.read())
 
-    #migrating users collection to employees
-    def addAccessTokens(self):
-        users = db.users
-
-        all = users.find()
-        for a in all:
-            employees.update({'first_name':a['first_name'], 'last_name':a['last_name']},
-            
-                            {'$set': {
-                                "user_id": a['user_id'], 'access_token': a['access_token']
-                            }
-            },
-                upsert=False,
-                )
 
     def getCategories(self):
         r = requests.get('http://pivotal-roster-api.cfapps.io/api/employees/tag/', auth=(

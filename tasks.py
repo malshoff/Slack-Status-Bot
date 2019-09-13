@@ -26,9 +26,10 @@ db = client.queue
 employees = db.employees
 s = SlackBot()
 
+
 @app.task
 def testtask(command, user_id):
-    
+
     s.slackBotUser.chat.post_message(channel='#ooq-test',
                                      text="testing with the Redis queue worked!",
                                      username='Out of Queue Bot',
@@ -49,7 +50,7 @@ def choose_command(command, user_id):
     elif command == "run":
         cur = employees.find_one({"user_id": user_id})
         return run(cur, user_id)
-        
+
     elif command == "runall":
         if user_id == 'UF57DA49F':  # Malachi's id
             runAll()
@@ -95,17 +96,17 @@ def processEvent(e):
     else:
         print("This message does not apply!")
 
+
 def refresh():
     rost = Roster("password.json", "EAST")
     rost.setEmployees()
     rost.setOutOfQueue()
+    s = SlackBot()
     s.refreshOOQ()
     print(f"Refresh Complete! Value of inTraining: {s.inTraining}")
 
 
 def run(eng, user_id):
-   
-
     if eng:
         s.setStatus(eng)
         return "From run(): Ran set status!"
@@ -116,8 +117,6 @@ def run(eng, user_id):
 
 
 def runAll():
-  
-
     if not s.inTraining:
         return False
     for engineer in s.inTraining:
@@ -126,11 +125,10 @@ def runAll():
 
 
 def listTestChannel():
-    
     s.msgOutOfQueue()
     return "listTestChannel: ran"
 
+
 def listAll():
-   
     s.msgAllStaff()
     return "listAll: ran"
