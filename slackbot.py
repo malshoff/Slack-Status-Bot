@@ -162,7 +162,7 @@ class SlackBot(object):
                     addStr += eng["first_name"] + " " + eng["last_name"] + ","
 
         if not addStr:
-            endstr = "Hello team! No data CEs are out of queue today."
+            endstr = "Hello team! No CEs are out of queue today."
         else:
             endstr += addStr
 

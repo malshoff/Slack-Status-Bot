@@ -22,7 +22,7 @@ class Roster(object):
     def __init__(self, passwordFile, tz):
         self.ENGINEER_IDS = set()  # ID's of engineers in given timezone
         self.EMPLOYEES = {}
-        self.UNAVAILABLE = {9, 10, 12, 13, 14, 15, 16}
+        self.UNAVAILABLE = {9, 10,11, 12, 13, 14, 15, 16}
         self.TODAYS_DATE = datetime.datetime.now().replace(
             tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
         self.TRAINING_CODES = {11}
