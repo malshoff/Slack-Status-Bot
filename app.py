@@ -10,10 +10,12 @@ from roster import Roster
 import requests
 from tasks import testtask, choose_command, processEvent
 
+
 client_id = os.environ["SLACK_CLIENT_ID"]
 client_secret = os.environ["SLACK_CLIENT_SECRET"]
 oauth_scope = os.environ["SLACK_SCOPE"]
 CONNECT_STRING = os.environ["CONNECT_STRING"]
+
 
 
 app = Flask(__name__)
@@ -21,6 +23,11 @@ app = Flask(__name__)
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 employees = db.employees
+
+ZOOM_MONGO = os.environ["ZOOM_MONGO"]
+zoomDBClient = MongoClient(ZOOM_MONGO)
+zdb = zoomDBClient.zoom
+zoomUsers = zdb.users
 
 
 s = SlackBot()
@@ -31,7 +38,8 @@ COMMANDS = {
     "run",
     "runall",
     "refresh",
-    "test"
+    "test",
+    "zoom"
 }
 
 PRIVILIGED_COMMANDS = {
@@ -122,6 +130,58 @@ def events():
     processEvent.apply_async(args=(r,), queue="events")
     return "received event"
 
+@app.route("/zoom", methods=["POST"])
+def zoom():
+    r = request.get_json()
+    
+    if r['event'] == 'meeting.participant_joined':
+        try:
+            curUser = r['payload']['object']['participant']['id']
+        except KeyError:
+            return "There is no ID"
+
+        match = zoomUsers.update_one({
+            'zoomID': curUser},
+            {'$inc': {'num_meetings':1}}
+            )
+        if match.matched_count != 0:
+            userName = r['payload']['object']['participant']['user_name']
+            print(f"\033[96m {userName} joined a zoom meeting! \033[00m")
+
+            s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
+                                            text=f"{userName} just joined a zoom meeting.",
+                                            username='Availability Bot',
+                                            link_names=1,
+                                            as_user=True
+                                            )
+            
+    
+    elif r['event'] == 'meeting.participant_left':
+        print(r)
+        try:
+            curUser = r['payload']['object']['participant']['id']
+        except KeyError:
+            return "There is no ID"
+        match = zoomUsers.update_one({
+            'zoomID': curUser,
+            'num_meetings': {'$gt': 0}
+            },
+            {'$inc': {'num_meetings':-1}}
+            )
+        if match.matched_count != 0:
+            userName = r['payload']['object']['participant']['user_name']
+            print(f"\033[96m {userName} left a zoom meeting! \033[00m")
+            s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
+                                            text=f"{userName} just left a zoom meeting.",
+                                            username='Availability Bot',
+                                            link_names=1,
+                                            as_user=True
+                                            )
+            
+    
+    #print(r)
+    #processEvent.apply_async(args=(r,), queue="events")
+    return "received event"
 
 def run(eng, user_id):
     if eng:

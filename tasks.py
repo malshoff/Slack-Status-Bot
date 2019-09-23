@@ -26,6 +26,29 @@ db = client.queue
 employees = db.employees
 s = SlackBot()
 
+ZOOM_MONGO = os.environ["ZOOM_MONGO"]
+zoomDBClient = MongoClient(ZOOM_MONGO)
+zdb = zoomDBClient.zoom
+zoomUsers = zdb.users
+
+@app.task
+def listInMeeting():
+    allmatches = []
+    inMeeting = zoomUsers.find({
+    "num_meetings": {
+        "$gt": 0
+    }
+    })
+    for n in inMeeting:
+        allmatches.append(f"{n['first_name']} {n['last_name']} ")
+
+    s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
+                                     text=f"The following CEs are on a Zoom Currently:{','.join(allmatches)}",
+                                     username='Availability Bot',
+                                     link_names=1
+                                     )
+    return "Done"
+
 
 @app.task
 def testtask(command, user_id):
@@ -42,6 +65,9 @@ def testtask(command, user_id):
 def choose_command(command, user_id):
     if command == "list":
         listTestChannel()
+
+    elif command == "zoom":
+        listInMeeting()
 
     elif command == "listall":
         if user_id == 'UF57DA49F':
