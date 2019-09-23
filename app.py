@@ -8,7 +8,6 @@ from pymongo import MongoClient
 from slackbot import SlackBot
 from roster import Roster
 import requests
-from threading import Thread
 from tasks import testtask, choose_command, processEvent
 
 client_id = os.environ["SLACK_CLIENT_ID"]

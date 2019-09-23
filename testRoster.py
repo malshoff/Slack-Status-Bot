@@ -3,8 +3,8 @@ from roster import Roster
 
 
 rost = Roster("password.json", "EAST")
-q = rost.getOutOfQueue()
-
+q = Roster.getOutOfQueue()
+print(q)
 
 '''rost.setEmployees()
 rost.getCategories()

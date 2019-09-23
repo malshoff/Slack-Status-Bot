@@ -7,20 +7,21 @@ from time import mktime
 import requests
 import urllib.parse
 import os
+import roster
 
 
 class SlackBot(object):
 
     def __init__(self, tz="EAST"):
         self.roster = Roster("password.json", tz)
-        self.inTraining = self.roster.getOutOfQueue()  # list of training engineers
+        self.inTraining = Roster.getOutOfQueue()  # list of training engineers
         self.BOT_TOKEN = os.environ['BOT_TOKEN']
         self.slackBotUser = Slacker(self.BOT_TOKEN)
         self.TRAINING_IDS = self.trainingIds()
 
 
     def refreshOOQ(self):
-        self.inTraining = self.roster.getOutOfQueue()
+        self.inTraining = Roster.getOutOfQueue()
         self.TRAINING_IDS = self.trainingIds()
         
     # Return a set of Slack user IDs of CEs that are Out of Queue today
@@ -123,7 +124,7 @@ class SlackBot(object):
 
     def msgOutOfQueue(self):
         endstr = "Hello team! The following CEs are out of queue on {}: ".format(
-            self.roster.TODAYS_DATE)
+            roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
             endstr += "No one today!"
@@ -145,7 +146,7 @@ class SlackBot(object):
         PAAS_TAGS = {39,40,41}  # Tags for data engineers
         addStr = ""
         endstr = "Hello team! The following PaaS CEs are out of queue on {}: ".format(
-            self.roster.TODAYS_DATE)
+            roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
             endstr = "Hello team! No PaaS CEs are out of queue today. "
@@ -176,7 +177,7 @@ class SlackBot(object):
         DATA_TAGS = {36, 37, 38}  # Tags for data engineers
 
         endstr = "Hello team! The following data CEs are out of queue on {}: ".format(
-            self.roster.TODAYS_DATE)
+            roster.TODAYS_DATE)
         addStr = ""
         if not self.inTraining or len(self.inTraining) == 0:
             endstr = "Hello team! No data CEs are out of queue today."
