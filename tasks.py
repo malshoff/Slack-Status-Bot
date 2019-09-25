@@ -40,26 +40,14 @@ def listInMeeting():
     }
     })
     for n in inMeeting:
-        allmatches.append(f"{n['first_name']} {n['last_name']} ")
+        allmatches.append(f"{n['first_name']} {n['last_name']}")
 
     s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
-                                     text=f"The following CEs are on a Zoom Currently:{','.join(allmatches)}",
+                                     text=f"The following CEs are on a Zoom Currently:{', '.join(allmatches)}",
                                      username='Availability Bot',
                                      link_names=1
                                      )
     return "Done"
-
-
-@app.task
-def testtask(command, user_id):
-
-    s.slackBotUser.chat.post_message(channel='#ooq-test',
-                                     text="testing with the Redis queue worked!",
-                                     username='Out of Queue Bot',
-                                     link_names=1
-                                     )
-    return "Done"
-
 
 @app.task
 def choose_command(command, user_id):

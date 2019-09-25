@@ -80,6 +80,12 @@ class SlackBot(object):
 
         if 'user_id' in employee and employee['user_id']:
             if self.isInTraining(employee):
+                self.slackBotUser.chat.post_message(channel=employee['user_id'],
+                                                    text="Your status has been set for your OOQ day. Type `/status` clear your status.",
+                                                    username='Out of Queue Bot',
+                                                    link_names=1,
+                                                    as_user=True
+                                                    )
                 slack = Slacker(employee['access_token'])
                 slack.users.profile.set(user=employee['user_id'], name='status_text',
                                         value='Training')
@@ -144,7 +150,7 @@ class SlackBot(object):
 
     def msgPAAS(self):
         PAAS_TAGS = {39,40,41}  # Tags for data engineers
-        addStr = ""
+        addStr = []
         endstr = "Hello team! The following PaaS CEs are out of queue on {}: ".format(
             roster.TODAYS_DATE)
 
@@ -160,12 +166,9 @@ class SlackBot(object):
                         flag = True
                         break
                 if flag:
-                    addStr += eng["first_name"] + " " + eng["last_name"] + ","
+                    addStr.append(eng["first_name"] + " " + eng["last_name"])
 
-        if not addStr:
-            endstr = "Hello team! No CEs are out of queue today."
-        else:
-            endstr += addStr
+        endstr += ', '.join(addStr)
 
         self.slackBotUser.chat.post_message(channel='#sup-pcf-staff',
                                             text=endstr,
@@ -178,7 +181,7 @@ class SlackBot(object):
 
         endstr = "Hello team! The following data CEs are out of queue on {}: ".format(
             roster.TODAYS_DATE)
-        addStr = ""
+        addStr = []
         if not self.inTraining or len(self.inTraining) == 0:
             endstr = "Hello team! No data CEs are out of queue today."
 
@@ -190,12 +193,10 @@ class SlackBot(object):
                         flag = True
                         break
                 if flag:
-                    addStr += eng["first_name"] + " " + eng["last_name"] + ","
+                    addStr.append(eng["first_name"] + " " + eng["last_name"])
 
-        if not addStr:
-            endstr = "Hello team! No data CEs are out of queue today."
-        else:
-            endstr += addStr
+        
+        endstr += ', '.join(addStr)
             
         self.slackBotUser.chat.post_message(channel='#support-data-amer',
                                             text=endstr,
