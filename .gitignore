@@ -4,6 +4,7 @@ venv/*
 __pycache__
 example-event
 pyvenv.cfg
-
 SlackBot.code-workspace
 .vscode/settings.json
+.vscode/settings.json
+.DS_Store
