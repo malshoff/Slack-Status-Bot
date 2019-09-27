@@ -3,7 +3,7 @@ import json
 from slackbot import SlackBot
 from roster import Roster
 
-
+# 45 12 ? * *
 rost = Roster("password.json", "EAST")
 
 rost.setEmployees()

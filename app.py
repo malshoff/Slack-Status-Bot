@@ -111,6 +111,9 @@ def execCommand():
     if command in PRIVILIGED_COMMANDS and user_id != "UF57DA49F":
         return "You are not authorized to use this command. Please reach out in #sup-ooq for help."
 
+    if command == "list":
+        choose_command.apply_async(args=(command, user_id), queue="commands")
+        return "This command will be displayed in #ooq-test"
     # enqueue the command
     choose_command.apply_async(args=(command, user_id), queue="commands")
     return "Executing command."
