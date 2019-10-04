@@ -128,8 +128,8 @@ class SlackBot(object):
                                             as_user=True
                                             )
 
-    def msgOutOfQueue(self):
-        endstr = "Hello team! The following CEs are out of queue on {}: ".format(
+    def msgOutOfQueue(self,user="ooq-test"):
+        endstr = "The following CEs are out of queue on {}: ".format(
             roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
@@ -138,7 +138,7 @@ class SlackBot(object):
             for eng in self.inTraining:
                 endstr += eng["first_name"] + " " + eng["last_name"] + ","
 
-        self.slackBotUser.chat.post_message(channel='#ooq-test',
+        self.slackBotUser.chat.post_message(channel=user,
                                             text=endstr,
                                             username='Out of Queue Bot',
                                             link_names=1
