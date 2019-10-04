@@ -51,8 +51,12 @@ def listInMeeting():
 
 @app.task
 def choose_command(command, user_id):
+    s.refreshOOQ()
+    print(f"Training Engineers: {s.inTraining}")
+    print(f"Training IDS: {s.TRAINING_IDS}")
+    
     if command == "list":
-        listTestChannel()
+        listTestChannel(user_id)
 
     elif command == "zoom":
         listInMeeting()
@@ -138,8 +142,8 @@ def runAll():
     return "ran runAll()"
 
 
-def listTestChannel():
-    s.msgOutOfQueue()
+def listTestChannel(user):
+    s.msgOutOfQueue(user)
     return "listTestChannel: ran"
 
 
