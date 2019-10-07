@@ -7,7 +7,7 @@ from time import mktime
 import requests
 import urllib.parse
 import os
-import roster
+import roster 
 
 
 class SlackBot(object):
