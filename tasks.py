@@ -112,15 +112,17 @@ def choose_command(command, user_id):
 
 @app.task
 def processEvent(e):
-    s.refreshOOQ()
-    '''print(f"Training Engineers: {s.inTraining}")
-    print(f"Training IDS: {s.TRAINING_IDS}")'''
-
-    if not s.TRAINING_IDS:
-        return "Message from processEvent task: There are no engineers in training today"
-
+    print(e)
+    if e["event"].get("thread_ts"):
+        seen = threads.find_one({"thread_id": e["event"]["thread_ts"]})
+        print(f"Seen is {seen}")
+        return "I don't respond within threads!"
     if e["event"].get("bot_id"):
         return "This is a bot!"
+
+    s.refreshOOQ()
+    if not s.TRAINING_IDS:
+        return "Message from processEvent task: There are no engineers in training today"
 
     flag = False
     try:
@@ -134,17 +136,19 @@ def processEvent(e):
             flag = eng
     #print(f"Flag after for loop: {flag}")
     if flag != False:
-        thread = e["event"]["ts"]
-        alreadyResponded = threads.find_one({'thread_id':thread})
-        if not alreadyResponded:
-            s.slackBotUser.chat.post_message(channel=e["event"]["channel"],
-                                         text=f"Hi! <@{flag}> is out of queue today, and may not be able to respond to this message immediately.",
-                                         username='Out of Queue Bot',
-                                         link_names=1,
-                                         thread_ts=thread
-                                         )
-        threads.insert_one({'thread_id':thread})
-        print("inserted thread into DB!")
+        '''thread = e["event"].get("thread_ts")
+        if thread:
+            alreadyResponded = threads.find_one({'thread_id':thread})
+            threads.insert_one({'thread_id':thread})
+            print("inserted thread into DB!")'''
+        
+        s.slackBotUser.chat.post_message(channel=e["event"]["channel"],
+                                        text=f"Hi! <@{flag}> is out of queue today, and may not be able to respond to this message immediately.",
+                                        username='Out of Queue Bot',
+                                        link_names=1,
+                                        thread_ts=e["event"]["ts"]
+                                        )
+        
     else:
         print("This message does not apply!")
 
