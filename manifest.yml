@@ -21,3 +21,12 @@ applications:
   disk_quota: 1G
   services:
     - redis
+- name: beat
+  no-route: true
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  command: celery -A tasks beat --loglevel=info 
+  instances: 1
+  memory: 1G
+  disk_quota: 1G
+  services:
+    - redis
