@@ -26,6 +26,7 @@ CONNECT_STRING = os.environ["CONNECT_STRING"]
 client = MongoClient(f'{CONNECT_STRING}')
 db = client.queue
 employees = db.employees
+threads = db.threads
 s = SlackBot()
 
 ZOOM_MONGO = os.environ["ZOOM_MONGO"]
@@ -112,12 +113,11 @@ def choose_command(command, user_id):
 @app.task
 def processEvent(e):
     s.refreshOOQ()
-    print(f"Training Engineers: {s.inTraining}")
-    print(f"Training IDS: {s.TRAINING_IDS}")
+    '''print(f"Training Engineers: {s.inTraining}")
+    print(f"Training IDS: {s.TRAINING_IDS}")'''
 
     if not s.TRAINING_IDS:
-        print("Message from processEvent task: There are no engineers in training today")
-        return
+        return "Message from processEvent task: There are no engineers in training today"
 
     if e["event"].get("bot_id"):
         return "This is a bot!"
@@ -135,12 +135,16 @@ def processEvent(e):
     #print(f"Flag after for loop: {flag}")
     if flag != False:
         thread = e["event"]["ts"]
-        s.slackBotUser.chat.post_message(channel=e["event"]["channel"],
+        alreadyResponded = threads.find_one({'thread_id':thread})
+        if not alreadyResponded:
+            s.slackBotUser.chat.post_message(channel=e["event"]["channel"],
                                          text=f"Hi! <@{flag}> is out of queue today, and may not be able to respond to this message immediately.",
                                          username='Out of Queue Bot',
                                          link_names=1,
                                          thread_ts=thread
                                          )
+        threads.insert_one({'thread_id':thread})
+        print("inserted thread into DB!")
     else:
         print("This message does not apply!")
 
