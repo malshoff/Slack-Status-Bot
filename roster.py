@@ -15,8 +15,7 @@ db = client.queue
 out = db.ooq
 timezones = db.timezones
 employees = db.employees
-TODAYS_DATE = datetime.datetime.now().replace(
-            tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
+
 
 class Roster():
     
@@ -26,6 +25,8 @@ class Roster():
         self.UNAVAILABLE = {9, 10,11, 12, 13, 14, 15, 16}
         self.TRAINING_CODES = {11}
         self.tz = tz
+        self.TODAYS_DATE = datetime.datetime.now().replace(
+            tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
         with open(str(passwordFile), 'r') as creds:
             self.credentials = json.loads(creds.read())
 
@@ -63,7 +64,7 @@ class Roster():
                 'last_name': person['last_name'],
                 'email': person['email'],
                 'timezone': person['timezone'],
-                'date': TODAYS_DATE
+                'date': self.TODAYS_DATE
             })
 
         employees.bulk_write([
@@ -78,7 +79,7 @@ class Roster():
     def setOutOfQueue(self):
 
         r = requests.get('https://pivotal-roster-api.cfapps.io/api/schedule/employee_schedule?active=true&audit_date=' +
-                         str(TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
+                         str(self.TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
         engs = r.json()
         #print(engs)
         res = []
@@ -91,13 +92,13 @@ class Roster():
                 ))
 
         out.update(
-            {'date': str(TODAYS_DATE)},
+            {'date': str(self.TODAYS_DATE)},
             {'$set': {'eng': res}},
             upsert=True
         )
 
     def getOutOfQueue():
-        outToday = out.find_one({"date":str(TODAYS_DATE)})
+        outToday = out.find_one({"date":str(self.TODAYS_DATE)})
         if outToday:
             return outToday['eng']
         return outToday

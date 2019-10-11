@@ -7,7 +7,7 @@ from time import mktime
 import requests
 import urllib.parse
 import os
-import roster 
+
 
 
 class SlackBot(object):
@@ -130,7 +130,7 @@ class SlackBot(object):
 
     def msgOutOfQueue(self,user="ooq-test"):
         endstr = "The following CEs are out of queue on {}: ".format(
-            roster.TODAYS_DATE)
+            self.roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
             endstr += "No one today!"
@@ -152,7 +152,7 @@ class SlackBot(object):
         PAAS_TAGS = {39,40,41}  # Tags for data engineers
         addStr = []
         endstr = "Hello team! The following PaaS CEs are out of queue on {}: ".format(
-            roster.TODAYS_DATE)
+            self.roster.TODAYS_DATE)
 
         if not self.inTraining or len(self.inTraining) == 0:
             endstr = "Hello team! No PaaS CEs are out of queue today. "
@@ -180,7 +180,7 @@ class SlackBot(object):
         DATA_TAGS = {36, 37, 38}  # Tags for data engineers
 
         endstr = "Hello team! The following data CEs are out of queue on {}: ".format(
-            roster.TODAYS_DATE)
+            self.roster.TODAYS_DATE)
         addStr = []
         if not self.inTraining or len(self.inTraining) == 0:
             endstr = "Hello team! No data CEs are out of queue today."
