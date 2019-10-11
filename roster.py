@@ -98,7 +98,9 @@ class Roster():
         )
 
     def getOutOfQueue():
-        outToday = out.find_one({"date":str(self.TODAYS_DATE)})
+        TODAYS_DATE = TODAYS_DATE = datetime.datetime.now().replace(
+            tzinfo=timezone('US/Eastern')).strftime("%m/%d/%Y")
+        outToday = out.find_one({"date":str(TODAYS_DATE)})
         if outToday:
             return outToday['eng']
         return outToday

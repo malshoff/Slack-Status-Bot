@@ -149,7 +149,7 @@ class SlackBot(object):
         self.msgData()
 
     def msgPAAS(self):
-        PAAS_TAGS = {39,40,41}  # Tags for data engineers
+        PAAS_TAGS = {39,40,41}  # Tags for PAAS engineers
         addStr = []
         endstr = "Hello team! The following PaaS CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
