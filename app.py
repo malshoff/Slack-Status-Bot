@@ -47,12 +47,19 @@ PRIVILIGED_COMMANDS = {
     "runall"
 }
 
+PRIVILIGED_USERS = {"UF57DA49F"}
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return "Command not found"
 
 @app.route("/", methods=["GET"])
 def pre_install():
     name = request.args['name'].split(' ')
     first_name = name[0]
     last_name = name[-1]
+
+    #in case someone has their middle name in the roster
     if len(name) == 3:
         first_name += '+' + name[1]
 
@@ -97,25 +104,25 @@ def post_install():
     r = Roster("password.json", "EAST")
     r.setOutOfQueue()
 
+    #set the user to Out of Queue if it is their OOQ day
     completed = employees.find_one({'first_name': first_name, 'last_name':last_name})
-    run(completed, response['user_id'])
+    choose_command.apply_async(args=("run", response['user_id']), queue="commands")
+    
 
     return "Auth complete! You will receive a notification on your Out of Queue day, and your status will be updated! \n\n Please check out #sup-ooq for discussion"
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return "Not found"
 
 
-@app.route("/command", methods=["GET", "POST"])
+@app.route("/command", methods=["POST"])
 def execCommand():
+    """Retrieve the user id and command from the post request, and use it to send a task to the broker"""
     user_id = request.form.get("user_id")
     command = request.form.get("text")
     if command not in COMMANDS:
         return flask.redirect(404)
 
-    if command in PRIVILIGED_COMMANDS and user_id != "UF57DA49F":
+    if command in PRIVILIGED_COMMANDS and user_id not in PRIVILIGED_USERS:
         return "You are not authorized to use this command. Please reach out in #sup-ooq for help."
 
     # enqueue the command
@@ -125,11 +132,17 @@ def execCommand():
 
 @app.route("/events", methods=["POST"])
 def events():
+    """ 
+    Events are messages and actions received by the slack API to this endpoint. 
+    They are sent to the events queue to be processed.
+    """
+
     r = request.get_json()
     print(r)
     processEvent.apply_async(args=(r,), queue="events")
     return "received event"
 
+#Not in development currently
 @app.route("/zoom", methods=["POST"])
 def zoom():
     r = request.get_json()
@@ -148,7 +161,7 @@ def zoom():
             userName = r['payload']['object']['participant']['user_name']
             print(f"\033[96m {userName} joined a zoom meeting! \033[00m")
 
-            s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
+            s.slackBotUser.chat.post_message(channel='#zoom-test',
                                             text=f"{userName} just joined a zoom meeting.",
                                             username='Availability Bot',
                                             link_names=1,
@@ -171,7 +184,7 @@ def zoom():
         if match.matched_count != 0:
             userName = r['payload']['object']['participant']['user_name']
             print(f"\033[96m {userName} left a zoom meeting! \033[00m")
-            s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
+            s.slackBotUser.chat.post_message(channel='#zoom-test',
                                             text=f"{userName} just left a zoom meeting.",
                                             username='Availability Bot',
                                             link_names=1,
@@ -182,12 +195,3 @@ def zoom():
     #print(r)
     #processEvent.apply_async(args=(r,), queue="events")
     return "received event"
-
-def run(eng, user_id):
-    if eng:
-        s.setStatus(eng)
-        return "Ran set status!"
-    else:
-        info = s.getUserById(user_id)
-        url = s.buildURL(info[1])
-        s.sendInitMsg(url, user_id)

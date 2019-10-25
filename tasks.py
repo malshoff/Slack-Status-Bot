@@ -11,6 +11,8 @@ vcap_services = os.getenv('VCAP_SERVICES', None)
 vcap_services = json.loads(vcap_services)
 
 rediscloud = vcap_services.get("p-redis")[0]
+
+#Redis broker URL retrieved from cf app env variables
 redis_url = 'redis://:{0}@{1}:{2}/0'.format(
     rediscloud["credentials"]["password"],
     rediscloud["credentials"]["host"],
@@ -73,7 +75,7 @@ def listInMeeting():
     for n in inMeeting:
         allmatches.append(f"{n['first_name']} {n['last_name']}")
 
-    s.slackBotUser.chat.post_message(channel='#sup-zoom-test',
+    s.slackBotUser.chat.post_message(channel='#zoom-test',
                                      text=f"The following CEs are on a Zoom Currently:{', '.join(allmatches)}",
                                      username='Availability Bot',
                                      link_names=1
