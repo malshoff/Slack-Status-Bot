@@ -41,7 +41,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # Calls refresh every minute.
     sender.add_periodic_task(60.0, refresh.s(), name='Refresh every minute')
 
-    # Executes every Monday morning at 7:30 a.m.
+    # Executes every day at 8:30 a.m.
     sender.add_periodic_task(
         crontab(hour=8, minute=30),
         daily.s(),
@@ -54,14 +54,16 @@ def daily():
     rost.setOutOfQueue()
 
     s = SlackBot()
-    print("From cron.py")
+    print("From cron.py") #debugging
     print(s.inTraining)
 
+    #iterate through list of CEs that are out of queue
     if s.inTraining:
         for engineer in s.inTraining:
             s.setStatus(engineer)
 
-    s.msgOutOfQueue()
+    #send message to staff channels with current out of queue people
+    s.msgOutOfQueue() 
     s.msgAllStaff()
 
 @app.task

@@ -1,6 +1,7 @@
 from roster import Roster
 
 
+Roster.getCategories()
 
 rost = Roster("password.json", "EAST")
 q = Roster.getOutOfQueue()

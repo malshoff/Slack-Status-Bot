@@ -77,7 +77,7 @@ class Roster():
         ])
 
     def setOutOfQueue(self):
-
+        #Retrieve the current OOQ users from the database
         r = requests.get('https://pivotal-roster-api.cfapps.io/api/schedule/employee_schedule?active=true&audit_date=' +
                          str(self.TODAYS_DATE), auth=(self.credentials['user'], self.credentials['pass']))
         engs = r.json()
