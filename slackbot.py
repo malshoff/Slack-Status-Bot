@@ -41,9 +41,14 @@ class SlackBot(object):
     # returns slack user ID and username of employee as a tuple
     def getUserByEmail(self, email):
         endpoint = 'https://slack.com/api/users.lookupByEmail'
+        
         response = requests.post(
             endpoint, data={'token': self.BOT_TOKEN, 'email': email})
-        return (response.json()['user']['id'], response.json()['user']['real_name'], response.json()['user']['name'])
+        try:
+            return (response.json()['user']['id'], response.json()['user']['real_name'], response.json()['user']['name'])
+        except KeyError:
+            print(f"KeyError Occured! Response was as follows: {response.json()}")
+            return None
 
     def getUserById(self, user_id):
         endpoint = 'https://slack.com/api/users.info'
@@ -111,7 +116,10 @@ class SlackBot(object):
         else:
             userInfo = self.getUserByEmail(employee['email'])
             url = f'https://queue.apps.pcfone.io/?name={employee["first_name"]}+{employee["last_name"]}'
-            self.sendInitMsg(url, userInfo[0])
+            if userInfo:
+                self.sendInitMsg(url, userInfo[0])
+            else:
+                print(f"User was not found. The employee is : {employee}")
 
     def sendInitMsg(self, url, user_id):
         msg = f'Hi! It looks like you have not yet authorized me to set your status to "training" yet. Please follow this url to do so:{url}'
