@@ -105,10 +105,7 @@ def choose_command(command, user_id):
         return run(cur, user_id)
 
     elif command == "runall":
-        if user_id == 'UF57DA49F':  # Malachi's id
-            runAll()
-        else:
-            return "Only Malachi can run this command. MUAHAHAHAHA"
+        runAll()
 
     elif command == "refresh":
         refresh()

@@ -47,7 +47,7 @@ PRIVILIGED_COMMANDS = {
     "runall"
 }
 
-PRIVILIGED_USERS = {"UF57DA49F"}
+PRIVILIGED_USERS = {"UF57DA49F","U054G9J88","U26R8ML07"}
 
 @app.errorhandler(404)
 def page_not_found(e):

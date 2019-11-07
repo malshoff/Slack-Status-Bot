@@ -139,13 +139,14 @@ class SlackBot(object):
     def msgOutOfQueue(self,user="ooq-test"):
         endstr = "The following CEs are out of queue on {}: ".format(
             self.roster.TODAYS_DATE)
-
+        addStr = []
         if not self.inTraining or len(self.inTraining) == 0:
             endstr += "No one today!"
         else:
             for eng in self.inTraining:
-                endstr += eng["first_name"] + " " + eng["last_name"] + ","
-
+                addStr.append(eng["first_name"] + " " + eng["last_name"])
+                
+        endstr += ', '.join(addStr)
         self.slackBotUser.chat.post_message(channel=user,
                                             text=endstr,
                                             username='Out of Queue Bot',
