@@ -4,7 +4,7 @@ Flask-OpenID==1.2.5
 Flask-WTF==0.14.2
 gunicorn
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 jsonschema==3.0.1
 MarkupSafe==1.1.1
 pymongo==3.8.0
